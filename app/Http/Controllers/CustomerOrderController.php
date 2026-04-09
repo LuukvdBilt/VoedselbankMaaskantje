@@ -10,10 +10,18 @@ use Illuminate\Http\Request;
 
 class CustomerOrderController extends Controller
 {
+    // Display all food package distributions for a client
+    // app/Http/Controllers/CustomerOrderController.php
+
     public function index($clientId)
     {
+        // Client::findOrFail($clientId) = Find Client by Id, throw 404 if not found
+        // Query: SELECT * FROM Client WHERE Id = $clientId LIMIT 1
         $client = Client::findOrFail($clientId);
 
+        // FoodPackageDistribution::whereHas() = Filter by related household
+        // ->with() = Eager load relationships to avoid N+1 queries
+        // Query: SELECT * FROM FoodPackageDistribution WHERE HouseholdId IN (SELECT Id FROM Household WHERE ClientId = $clientId) ORDER BY created_at DESC
         $distributions = FoodPackageDistribution::whereHas('household', function ($query) use ($clientId) {
             $query->where('ClientId', $clientId);
         })
@@ -34,9 +42,16 @@ class CustomerOrderController extends Controller
         ]);
     }
 
+    // Show form to create a new food package distribution
     public function create($clientId)
     {
+        // Client::findOrFail($clientId) = Find Client by Id, throw 404 if not found
+        // Query: SELECT * FROM Client WHERE Id = $clientId LIMIT 1
         $client = Client::findOrFail($clientId);
+        
+        // FoodpackageModel::where('is_active', true) = Get only active food packages
+        // ->with() = Eager load relationships (products, allergies)
+        // Query: SELECT * FROM FoodPackages WHERE is_active = true
         $foodPackages = FoodpackageModel::where('is_active', true)
             ->with(['products', 'allergies'])
             ->get();
@@ -47,8 +62,12 @@ class CustomerOrderController extends Controller
         ]);
     }
 
+    // Store a new food package distribution in the database
     public function store(Request $request, $clientId)
     {
+        // $request->validate() = Validate incoming request data
+        // 'required|exists:FoodPackages,Id' = FoodPackageId must exist in FoodPackages table
+        // All other fields are optional (nullable)
         $validated = $request->validate([
             'food_package_id' => 'required|exists:FoodPackages,Id',
             'wishes' => 'nullable|string|max:500',
@@ -57,8 +76,12 @@ class CustomerOrderController extends Controller
             'note' => 'nullable|string|max:500',
         ]);
 
+        // Household::where('ClientId', $clientId)->firstOrFail() = Find household for this client
+        // Query: SELECT * FROM Household WHERE ClientId = $clientId LIMIT 1
         $household = Household::where('ClientId', $clientId)->firstOrFail();
 
+        // FoodPackageDistribution::create() = Create new distribution record
+        // INSERT INTO FoodPackageDistribution (HouseholdId, FoodPackageId, DistributionDate, is_active, note) VALUES (...)
         FoodPackageDistribution::create([
             'HouseholdId' => $household->Id,
             'FoodPackageId' => $validated['food_package_id'],
@@ -82,17 +105,26 @@ class CustomerOrderController extends Controller
             ->with('success', 'Bestelling succesvol geplaatst!');
     }
 
+    // Show form to edit an existing food package distribution
     public function edit($clientId, $orderId)
     {
+        // Client::findOrFail($clientId) = Find Client by Id, throw 404 if not found
+        // Query: SELECT * FROM Client WHERE Id = $clientId LIMIT 1
         $client = Client::findOrFail($clientId);
+        
+        // FoodPackageDistribution::findOrFail($orderId) = Find distribution by Id
+        // Query: SELECT * FROM FoodPackageDistribution WHERE Id = $orderId LIMIT 1
         $distribution = FoodPackageDistribution::findOrFail($orderId);
+        
+        // Load active food packages with relationships
         $foodPackages = FoodpackageModel::where('is_active', true)
             ->with(['products', 'allergies'])
             ->get();
 
-        // Verify this distribution belongs to the client's household
+        // Verify authorization: distribution must belong to this client's household
         $household = Household::where('ClientId', $clientId)->firstOrFail();
         if ($distribution->HouseholdId != $household->Id) {
+            // Return 403 Forbidden if unauthorized
             abort(403, 'Unauthorized');
         }
 
@@ -103,8 +135,10 @@ class CustomerOrderController extends Controller
         ]);
     }
 
+    // Update an existing food package distribution
     public function update(Request $request, $clientId, $orderId)
     {
+        // $request->validate() = Validate incoming request data
         $validated = $request->validate([
             'food_package_id' => 'required|exists:FoodPackages,Id',
             'wishes' => 'nullable|string|max:500',
@@ -113,13 +147,17 @@ class CustomerOrderController extends Controller
             'note' => 'nullable|string|max:500',
         ]);
 
+        // FoodPackageDistribution::findOrFail($orderId) = Find distribution by Id
         $distribution = FoodPackageDistribution::findOrFail($orderId);
 
+        // Verify authorization: distribution must belong to this client's household
         $household = Household::where('ClientId', $clientId)->firstOrFail();
         if ($distribution->HouseholdId != $household->Id) {
             abort(403, 'Unauthorized');
         }
 
+        // $distribution->update() = Update distribution record
+        // UPDATE FoodPackageDistribution SET FoodPackageId = ..., note = ... WHERE Id = $orderId
         $distribution->update([
             'FoodPackageId' => $validated['food_package_id'],
             'note' => $validated['note'] ?? null,
@@ -140,16 +178,20 @@ class CustomerOrderController extends Controller
             ->with('success', 'Bestelling succesvol bijgewerkt!');
     }
 
+    // Delete a food package distribution
     public function destroy($clientId, $orderId)
     {
+        // FoodPackageDistribution::findOrFail($orderId) = Find distribution by Id
         $distribution = FoodPackageDistribution::findOrFail($orderId);
 
-        // Verify this distribution belongs to the client's household
+        // Verify authorization: distribution must belong to this client's household
         $household = Household::where('ClientId', $clientId)->firstOrFail();
         if ($distribution->HouseholdId != $household->Id) {
             abort(403, 'Unauthorized');
         }
 
+        // $distribution->delete() = Delete the distribution record
+        // DELETE FROM FoodPackageDistribution WHERE Id = $orderId
         $distribution->delete();
 
         return redirect()->route('customersorders.index', $clientId)

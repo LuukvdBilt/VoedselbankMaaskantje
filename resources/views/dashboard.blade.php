@@ -178,7 +178,7 @@
                             </svg>
                         </div>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Update je registratiegegevens en gezinssamenstelling</p>
-                        <a href="{{ route('customersregistration.show', auth()->user()->id ?? 1) }}" class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-green-500/30">
+                        <a href="{{ route('customersregistration.index') }}" class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-green-500/30">
                             Bijwerken
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
