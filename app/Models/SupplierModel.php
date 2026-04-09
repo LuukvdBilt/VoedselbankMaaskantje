@@ -31,6 +31,21 @@ class SupplierModel extends Model
         return DB::select('CALL sp_GetAllSuppliers()');
     }
 
+    public function createSupplier(array $data): void
+    {
+        DB::insert('CALL sp_CreateSupplier(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $data['CompanyName'],
+            $data['FirstName'],
+            $data['LastName'],
+            $data['Email'],
+            $data['Phone'],
+            $data['Street'],
+            $data['HouseNumber'],
+            $data['PostalCode'],
+            $data['City']
+         ]);
+    }
+
     public function contact()
     {
         return $this->belongsTo(ContactModel::class, 'ContactId');

@@ -57,12 +57,12 @@
                                 <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                     {{ $item->ProductNote ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm">
-                                    <a href="{{ route('inventory.edit', $item->Id) }}" class="inline-flex items-center justify-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-medium">
+                                    <a href="{{ route('inventory.edit', $item->InventoryId) }}" class="inline-flex items-center justify-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-medium">
                                         {{ __('wijzigen') }}
                                     </a>
                                 </td>
                                 <td class="px-6 py-4 text-sm">
-                                    <form action="{{ route('inventory.destroy', $item->Id) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Weet u zeker?') }}')">
+                                    <form action="{{ route('inventory.destroy', $item->InventoryId) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Weet u zeker?') }}')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="inline-flex items-center justify-center px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs font-medium">

@@ -15,9 +15,10 @@ return new class extends Migration
         | DROP bestaande procedures
         |--------------------------------------------------------------------------
         */
-        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllSuppliers;");
-        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllAllergies;");
-        DB::statement("DROP PROCEDURE IF EXISTS GetInventory;");
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllAllergies;');
+        DB::statement('DROP PROCEDURE IF EXISTS GetInventory;');
+        DB::statement('DROP PROCEDURE IF EXISTS DeleteProductById;');
 
         /*
         |--------------------------------------------------------------------------
@@ -45,7 +46,7 @@ return new class extends Migration
         | CREATE sp_getAllAllergies (met JOINs zoals verplicht)
         |--------------------------------------------------------------------------
         */
-        DB::statement("
+        DB::statement('
             CREATE PROCEDURE sp_getAllAllergies()
             BEGIN
                 SELECT 
@@ -62,14 +63,14 @@ return new class extends Migration
                 GROUP BY a.Id, a.Name, a.Description
                 ORDER BY a.Name;
             END;
-        ");
+        ');
 
         /*
         |--------------------------------------------------------------------------
         | CREATE GetInventory
         |--------------------------------------------------------------------------
         */
-        DB::statement("
+        DB::statement('
             CREATE PROCEDURE GetInventory()
             BEGIN
                 SELECT 
@@ -89,7 +90,20 @@ return new class extends Migration
                 WHERE i.is_active = 1
                 ORDER BY p.ProductName;
             END;
-        ");
+        ');
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE DeleteProductById
+        |--------------------------------------------------------------------------
+        */
+        DB::statement('
+            CREATE PROCEDURE DeleteInventoryById(IN inventoryId INT)
+                BEGIN
+                    DELETE FROM Inventory WHERE Id = inventoryId;
+                END;
+
+        ');
     }
 
     /**
@@ -97,9 +111,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllSuppliers;");
-        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllAllergies;");
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllAllergies;');
         DB::statement('DROP PROCEDURE IF EXISTS GetAllSuppliers');
         DB::statement('DROP PROCEDURE IF EXISTS GetInventory');
+        DB::statement('DROP PROCEDURE IF EXISTS DeleteInventoryById');
     }
 };

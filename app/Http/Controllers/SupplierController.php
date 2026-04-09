@@ -4,23 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SupplierController extends Controller
 {
     private $SupplierModel;
+
     public function __construct()
     {
-        $this->SupplierModel = new SupplierModel();
+        $this->SupplierModel = new SupplierModel;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = 6;
+        $page = $request->get('page', 1);
 
-        $suppliers = $this->SupplierModel->getAllSuppliers();
-        
-        return view('supplier.index', [
-            'suppliers' => $suppliers
-        ]);
+        $allSuppliers = collect($this->SupplierModel->getAllSuppliers());
+        $offset = ($page - 1) * $perPage;
+        $suppliers = $allSuppliers->slice($offset, $perPage)->values();
+
+        $suppliersPaginated = new LengthAwarePaginator(
+            $suppliers,
+            $allSuppliers->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('supplier.index', ['suppliers' => $suppliersPaginated]);
     }
 
     /**
@@ -28,7 +40,11 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        //
+        $suppliers = $this->SupplierModel->getAllSuppliers();
+
+        return view('supplier.create', [
+            'suppliers' => $suppliers,
+        ]);
     }
 
     /**
@@ -36,7 +52,25 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'CompanyName' => 'required|string|max:255',
+            'FirstName' => 'required|string|max:255',
+            'LastName' => 'required|string|max:255',
+            'Email' => 'required|email|max:255',
+            'Phone' => 'required|string|max:255',
+            'Street' => 'required|string|max:255',
+            'HouseNumber' => 'required|string|max:255',
+            'PostalCode' => 'required|string|max:255',
+            'City' => 'required|string|max:255',
+        ]);
+
+        $this->SupplierModel->createSupplier($validated);
+
+        if ($validated) {
+            return redirect()->route('supplier.index')->with('success', 'Supplier created successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Failed to create supplier. Please try again.');
+        }
     }
 
     /**
@@ -69,6 +103,6 @@ class SupplierController extends Controller
      */
     public function destroy(SupplierModel $supplier)
     {
-       //
+        //
     }
 }

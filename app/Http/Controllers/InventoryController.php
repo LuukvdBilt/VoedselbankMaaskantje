@@ -68,7 +68,7 @@ class InventoryController extends Controller
      */
     public function destroy(string $id)
     {
-        DB::delete('DELETE FROM Inventory WHERE id = ?', [$id]);
+        DB::statement('CALL DeleteInventoryById(?)', [$id]);
         return redirect()->route('inventory.index')->with('success', 'Inventory item deleted successfully.');
     }
 }
