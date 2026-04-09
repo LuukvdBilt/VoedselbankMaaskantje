@@ -8,144 +8,194 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('addresses', function (Blueprint $table) {
-            $table->id();
-            $table->string('street');
-            $table->string('house_number', 10);
-            $table->string('postal_code', 20);
-            $table->string('city');
+        Schema::create('Address', function (Blueprint $table) {
+            $table->id('Id');
+            $table->string('Street');
+            $table->string('HouseNumber', 10);
+            $table->string('PostalCode', 20);
+            $table->string('City');
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
         });
 
-        Schema::create('people', function (Blueprint $table) {
-            $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique();
-            $table->string('phone', 50);
-            $table->foreignId('address_id')->constrained('addresses');
+        Schema::create('Contact', function (Blueprint $table) {
+            $table->id('Id');
+            $table->unsignedBigInteger('UserId');
+            $table->string('FirstName');
+            $table->string('LastName');
+            $table->string('Phone', 20)->nullable();
+            $table->unsignedBigInteger('AddressId')->nullable();
+            $table->timestamps();
+            $table->boolean('is_active')->default(true);
+            $table->string('note')->nullable();
+
+            $table->foreign('UserId')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('AddressId')->references('Id')->on('Address')->onDelete('set null');
+        });
+
+        Schema::create('Client', function (Blueprint $table) {
+            $table->id('Id');
+            $table->string('FirstName');
+            $table->string('LastName');
+            $table->string('Phone', 20)->nullable();
+            $table->unsignedBigInteger('AddressId')->nullable();
+            $table->timestamps();
+            $table->boolean('is_active')->default(true);
+            $table->string('note')->nullable();
+
+            $table->foreign('AddressId')->references('Id')->on('Address')->onDelete('set null');
+        });
+
+        Schema::create('Category', function (Blueprint $table) {
+            $table->id('Id');
+            $table->string('Name')->unique();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
         });
 
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
+        Schema::create('Supplier', function (Blueprint $table) {
+            $table->id('Id');
+            $table->string('CompanyName');
+            $table->unsignedBigInteger('ContactId');
+            $table->timestamps();
+            $table->boolean('is_active')->default(true);
+            $table->string('note')->nullable();
+
+            $table->foreign('ContactId')->references('Id')->on('Contact')->onDelete('cascade');
+        });
+
+        Schema::create('Product', function (Blueprint $table) {
+            $table->id('Id');
+            $table->string('Barcode', 100)->unique();
+            $table->string('ProductName');
+            $table->unsignedBigInteger('CategoryId');
+            $table->unsignedBigInteger('SupplierId');
+            $table->timestamps();
+            $table->boolean('is_active')->default(true);
+            $table->string('note')->nullable();
+
+            $table->foreign('CategoryId')->references('Id')->on('Category');
+            $table->foreign('SupplierId')->references('Id')->on('Supplier');
+        });
+
+        Schema::create('Allergies', function (Blueprint $table) {
+            $table->id('Id');
+            $table->string('Name')->unique();
+            $table->string('Description')->nullable();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
         });
 
-          Schema::create('suppliers', function (Blueprint $table) {
-            $table->id();
-            $table->string('company_name');
-            $table->string('contact_person');
-            $table->foreignId('person_id')->constrained('people');
+        Schema::create('FoodPackages', function (Blueprint $table) {
+            $table->id('Id');
+            $table->string('Name');
+            $table->string('Description')->nullable();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
         });
 
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->string('barcode', 100)->unique();
-            $table->string('product_name');
-            $table->foreignId('category_id')->nullable()->constrained('categories');
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
+        Schema::create('FoodPackage_Product', function (Blueprint $table) {
+            $table->id('Id');
+            $table->unsignedBigInteger('FoodPackageId');
+            $table->unsignedBigInteger('ProductId');
+            $table->integer('Quantity')->default(1);
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
+
+            $table->unique(['FoodPackageId', 'ProductId']);
+            $table->foreign('FoodPackageId')->references('Id')->on('FoodPackages')->onDelete('cascade');
+            $table->foreign('ProductId')->references('Id')->on('Product')->onDelete('cascade');
         });
 
-        Schema::create('allergies', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->string('description');
+        Schema::create('FoodPackage_Allergy', function (Blueprint $table) {
+            $table->id('Id');
+            $table->unsignedBigInteger('FoodPackageId');
+            $table->unsignedBigInteger('AllergyId');
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
+
+            $table->unique(['FoodPackageId', 'AllergyId']);
+            $table->foreign('FoodPackageId')->references('Id')->on('FoodPackages')->onDelete('cascade');
+            $table->foreign('AllergyId')->references('Id')->on('Allergies')->onDelete('cascade');
         });
 
-        Schema::create('food_packages', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('description');
-            $table->string('composition');
+        Schema::create('Inventory', function (Blueprint $table) {
+            $table->id('Id');
+            $table->unsignedBigInteger('ProductId');
+            $table->unsignedBigInteger('SupplierId')->nullable();
+            $table->integer('Quantity')->default(0);
+            $table->dateTime('ExpirationDate')->nullable();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
+
+            $table->foreign('ProductId')->references('Id')->on('Product');
+            $table->foreign('SupplierId')->references('Id')->on('Supplier')->onDelete('set null');
         });
 
-        Schema::create('inventories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('product_id')->constrained('products');
-            $table->integer('quantity')->default(0);
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
-            $table->foreignId('food_package_id')->nullable()->constrained('food_packages');
-            $table->dateTime('expiration_date')->nullable();
+        Schema::create('Household', function (Blueprint $table) {
+            $table->id('Id');
+            $table->unsignedBigInteger('ClientId');
+            $table->integer('TotalMembers')->default(1);
+            $table->dateTime('RegistrationDate')->useCurrent();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
+
+            $table->foreign('ClientId')->references('Id')->on('Client')->onDelete('cascade');
         });
 
-        Schema::create('food_package_allergies', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('food_package_id')->constrained('food_packages');
-            $table->foreignId('allergies_id')->constrained('allergies');
+        Schema::create('HouseholdMember', function (Blueprint $table) {
+            $table->id('Id');
+            $table->unsignedBigInteger('HouseholdId');
+            $table->string('FirstName');
+            $table->string('LastName')->nullable();
+            $table->string('Relation', 50)->nullable();
+            $table->date('DateOfBirth')->nullable();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
+
+            $table->foreign('HouseholdId')->references('Id')->on('Household')->onDelete('cascade');
         });
 
-        Schema::create('households', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('person_id')->constrained('people');
-            $table->integer('total_members')->default(1);
-            $table->dateTime('registration_date');
+        Schema::create('FoodPackageDistribution', function (Blueprint $table) {
+            $table->id('Id');
+            $table->unsignedBigInteger('HouseholdId');
+            $table->unsignedBigInteger('FoodPackageId');
+            $table->unsignedBigInteger('VolunteerId')->nullable();
+            $table->dateTime('DistributionDate')->useCurrent();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
-        });
 
-        Schema::create('household_members', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('household_id')->constrained('households');
-            $table->foreignId('person_id')->constrained('people');
-            $table->string('relation', 50);
-            $table->date('date_of_birth')->nullable();
-            $table->timestamps();
-            $table->boolean('is_active')->default(true);
-            $table->string('note')->nullable();
-        });
-
-        Schema::create('food_package_distributions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('household_id')->constrained('households');
-            $table->foreignId('food_package_id')->constrained('food_packages');
-            $table->dateTime('distribution_date');
-            $table->foreignId('volunteer_id')->nullable()->constrained('people');
-            $table->timestamps();
-            $table->boolean('is_active')->default(true);
-            $table->string('note')->nullable();
+            $table->foreign('HouseholdId')->references('Id')->on('Household')->onDelete('cascade');
+            $table->foreign('FoodPackageId')->references('Id')->on('FoodPackages');
+            $table->foreign('VolunteerId')->references('Id')->on('Contact')->onDelete('set null');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('food_package_distributions');
-        Schema::dropIfExists('household_members');
-        Schema::dropIfExists('households');
-        Schema::dropIfExists('food_package_allergies');
-        Schema::dropIfExists('inventories');
-        Schema::dropIfExists('food_packages');
-        Schema::dropIfExists('allergies');
-        Schema::dropIfExists('suppliers');
-        Schema::dropIfExists('products');
-        Schema::dropIfExists('categories');
-        Schema::dropIfExists('people');
-        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('FoodPackageDistribution');
+        Schema::dropIfExists('HouseholdMember');
+        Schema::dropIfExists('Household');
+        Schema::dropIfExists('Inventory');
+        Schema::dropIfExists('FoodPackage_Allergy');
+        Schema::dropIfExists('FoodPackage_Product');
+        Schema::dropIfExists('FoodPackages');
+        Schema::dropIfExists('Allergies');
+        Schema::dropIfExists('Product');
+        Schema::dropIfExists('Supplier');
+        Schema::dropIfExists('Contact');
+        Schema::dropIfExists('Client');
+        Schema::dropIfExists('Category');
+        Schema::dropIfExists('Address');
     }
 };
