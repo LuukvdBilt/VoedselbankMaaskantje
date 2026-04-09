@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Log;
 
 class AllergiesController extends Controller
 {
+    private $AllergiesModel;
+
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->AllergiesModel = new AllergiesModel();
     }
 
     /**
@@ -19,7 +21,7 @@ class AllergiesController extends Controller
     public function index()
     {
         try {
-            $allergies = AllergiesModel::orderBy('Name')->get();
+            $allergies = $this->AllergiesModel->orderBy('Name')->get();
 
             Log::info('Allergieën succesvol geladen.');
 
@@ -30,6 +32,8 @@ class AllergiesController extends Controller
 
             return back()->with('error', 'Er ging iets mis bij het laden van de allergieën.');
         }
+
+        return view('allergies.index', compact('allergies'));
     }
 
     /**
