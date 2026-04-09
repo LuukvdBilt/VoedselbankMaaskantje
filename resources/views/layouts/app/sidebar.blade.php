@@ -25,6 +25,9 @@
                         </flux:sidebar.item>
                         
                     @endif
+                    <flux:sidebar.item icon="truck" :href="route('supplier.index')" :current="request()->routeIs('supplier.index')" wire:navigate>
+                        {{ __('Leverancier Overzicht') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
                 
             </flux:sidebar.nav>
