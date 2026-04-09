@@ -1,10 +1,10 @@
 <x-layouts::app :title="__('Nieuwe Leverancier')">
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div
-            class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+            class="relative mx-auto w-full max-w-2xl overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
 
             <h1 class="px-6 py-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">
-                Nieuwe Leverancier
+                Nieuwe leverancier toevoegen
             </h1>
 
             @if (session('error'))
