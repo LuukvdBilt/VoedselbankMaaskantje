@@ -10,18 +10,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-<<<<<<< HEAD
-        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers;');
-=======
         /*
         |--------------------------------------------------------------------------
         | DROP bestaande procedures
         |--------------------------------------------------------------------------
         */
-        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllSuppliers;");
-        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllAllergies;");
-        DB::statement("DROP PROCEDURE IF EXISTS GetInventory;");
->>>>>>> 866e6c5ef364dbe1f18128424fba806597dd37ec
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllAllergies;');
+        DB::statement('DROP PROCEDURE IF EXISTS GetInventory;');
 
         /*
         |--------------------------------------------------------------------------
@@ -44,21 +40,34 @@ return new class extends Migration
             LEFT JOIN users u ON c.UserId = u.Id;
             END;
         ");
+        DB::statement('
+            DROP PROCEDURE IF EXISTS sp_deleteSupplier;
+        ');
 
-<<<<<<< HEAD
-        DB::statement('DROP PROCEDURE IF EXISTS sp_createSupplier;');
+        DB::statement("
+            CREATE PROCEDURE sp_deleteSupplier(
+                IN p_Id INT
+            )
+            BEGIN
+                DELETE FROM Supplier WHERE Id = p_Id;
+            END;
+        ");
 
         DB::statement('
+            DROP PROCEDURE IF EXISTS sp_createSupplier;
+        ');
+
+        DB::statement("
             CREATE PROCEDURE sp_createSupplier(
                 IN p_CompanyName VARCHAR(255),
                 IN p_FirstName VARCHAR(100),
                 IN p_LastName VARCHAR(100),
                 IN p_Email VARCHAR(255),
+                IN p_Phone VARCHAR(20),
                 IN p_Street VARCHAR(255),
-                IN p_HouseNumber INT,
+                IN p_HouseNumber BIGINT,
                 IN p_PostalCode VARCHAR(10),
-                IN p_City VARCHAR(100),
-                IN p_Phone VARCHAR(20)
+                IN p_City VARCHAR(100)
             )
             BEGIN
                 DECLARE v_AddressId INT;
@@ -67,7 +76,7 @@ return new class extends Migration
                 DECLARE v_UserId BIGINT UNSIGNED;
                 
                 INSERT INTO users (name, email, password, created_at, updated_at)
-                VALUES (CONCAT(p_FirstName, \' \', p_LastName), p_Email, \'PlaceholderPassword\', NOW(), NOW());
+                VALUES (CONCAT(p_FirstName, ' ', p_LastName), p_Email, 'PlaceholderPassword', NOW(), NOW());
                 SET v_UserId = LAST_INSERT_ID();
                 
                 INSERT INTO Address (Street, HouseNumber, PostalCode, City, created_at, updated_at)
@@ -102,14 +111,85 @@ return new class extends Migration
                 LEFT JOIN users u ON c.UserId = u.Id
                 WHERE s.Id = v_SupplierId;
             END;
+        ");
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE sp_getSupplierById
+        |--------------------------------------------------------------------------
+        */
+        DB::statement('
+            CREATE PROCEDURE sp_getSupplierById(
+                IN supplierId INT
+            )
+            BEGIN
+                SELECT
+                    s.Id,
+                    a.Street,
+                    a.HouseNumber,
+                    a.PostalCode,
+                    a.City,
+                    c.Phone,
+                    u.Email,
+                    c.FirstName,
+                    c.LastName,
+                    s.CompanyName
+                FROM Supplier s
+                LEFT JOIN Contact c ON s.ContactId = c.Id
+                LEFT JOIN Address a ON c.AddressId = a.Id
+                LEFT JOIN users u ON c.UserId = u.Id
+                WHERE s.Id = supplierId;
+            END;
         ');
-=======
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE sp_updateSupplier
+        |--------------------------------------------------------------------------
+        */
+        DB::statement('
+            CREATE PROCEDURE sp_updateSupplier(
+            IN p_supplierId INT,
+            IN p_companyName VARCHAR(255),
+            IN p_firstName VARCHAR(100),
+            IN p_lastName VARCHAR(100),
+            IN p_street VARCHAR(255),
+            IN p_houseNumber VARCHAR(10),
+            IN p_postalCode VARCHAR(50),
+            IN p_city VARCHAR(100),
+            IN p_phone VARCHAR(20),
+            IN p_email VARCHAR(255)
+            )
+            BEGIN
+            DECLARE affected_rows INT DEFAULT 0;
+
+            UPDATE Supplier s
+            INNER JOIN Contact c ON s.ContactId = c.Id
+            INNER JOIN Address a ON c.AddressId = a.Id
+            INNER JOIN users u ON c.UserId = u.Id
+            SET
+                s.CompanyName = p_companyName,
+                c.FirstName = p_firstName,
+                c.LastName = p_lastName,
+                a.Street = p_street,
+                a.HouseNumber = p_houseNumber,
+                a.PostalCode = p_postalCode,
+                a.City = p_city,
+                c.Phone = p_phone,
+                u.Email = p_email
+            WHERE s.Id = p_supplierId;
+
+            SET affected_rows = ROW_COUNT();
+            SELECT affected_rows AS rows_updated;
+            END;
+        ');
+
         /*
         |--------------------------------------------------------------------------
         | CREATE sp_getAllAllergies (met JOINs zoals verplicht)
         |--------------------------------------------------------------------------
         */
-        DB::statement("
+        DB::statement('
             CREATE PROCEDURE sp_getAllAllergies()
             BEGIN
                 SELECT 
@@ -126,14 +206,14 @@ return new class extends Migration
                 GROUP BY a.Id, a.Name, a.Description
                 ORDER BY a.Name;
             END;
-        ");
+        ');
 
         /*
         |--------------------------------------------------------------------------
         | CREATE GetInventory
         |--------------------------------------------------------------------------
         */
-        DB::statement("
+        DB::statement('
             CREATE PROCEDURE GetInventory()
             BEGIN
                 SELECT 
@@ -153,8 +233,7 @@ return new class extends Migration
                 WHERE i.is_active = 1
                 ORDER BY p.ProductName;
             END;
-        ");
->>>>>>> 866e6c5ef364dbe1f18128424fba806597dd37ec
+        ');
     }
 
     /**
@@ -162,14 +241,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-<<<<<<< HEAD
-        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers');
-        DB::statement('DROP PROCEDURE IF EXISTS sp_createSupplier;');
-=======
-        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllSuppliers;");
-        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllAllergies;");
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllAllergies;');
         DB::statement('DROP PROCEDURE IF EXISTS GetAllSuppliers');
         DB::statement('DROP PROCEDURE IF EXISTS GetInventory');
->>>>>>> 866e6c5ef364dbe1f18128424fba806597dd37ec
     }
 };
