@@ -62,13 +62,23 @@
                                     </a>
                                 </td>
                                 <td class="px-6 py-4 text-sm">
-                                    <form action="{{ route('inventory.destroy', $item->InventoryId) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Weet u zeker?') }}')">
+                                    <form id="deleteForm-{{ $item->InventoryId }}" action="{{ route('inventory.destroy', $item->InventoryId) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="inline-flex items-center justify-center px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs font-medium">
+                                        <button type="button" onclick="promptDeleteCode('{{ $item->InventoryId }}', '{{ $deletecode }}')" class="inline-flex items-center justify-center px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs font-medium">
                                             {{ __('Verwijderen') }}
                                         </button>
                                     </form>
+                                    <script>
+                                        function promptDeleteCode(itemId, correctCode) {
+                                            const enteredCode = prompt('{{ __('Voer de verwijderingscode in:') }}');
+                                            if (enteredCode === correctCode) {
+                                                document.getElementById('deleteForm-' + itemId).submit();
+                                            } else if (enteredCode !== null) {
+                                                alert('{{ __('Ongeldige code!') }}');
+                                            }
+                                        }
+                                    </script>
                                 </td>
                             </tr>
                         @endforeach
