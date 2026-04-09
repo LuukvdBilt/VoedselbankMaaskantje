@@ -8,9 +8,10 @@ USE FoodBankDB;
 CREATE TABLE Address (
     Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     Street VARCHAR(255) NOT NULL,
-    HouseNumber VARCHAR(10) NOT NULL,
-    PostalCode VARCHAR(20) NOT NULL,
-    City VARCHAR(255) NOT NULL,
+    HouseNumber INT NOT NULL,
+    Addition VARCHAR(10) NULL,
+    PostalCode VARCHAR(40) NOT NULL,
+    City VARCHAR(100) NOT NULL,
     created_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6) NULL ON UPDATE CURRENT_TIMESTAMP(6),
     is_active BOOLEAN DEFAULT TRUE,
@@ -23,8 +24,8 @@ CREATE TABLE Address (
 CREATE TABLE Contact (
     Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     UserId BIGINT UNSIGNED NOT NULL,
-    FirstName VARCHAR(255) NOT NULL,
-    LastName VARCHAR(255) NOT NULL,
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
     Phone VARCHAR(20) NULL,
     AddressId BIGINT UNSIGNED NULL,
     created_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
@@ -44,8 +45,8 @@ CREATE TABLE Contact (
 -- =====================
 CREATE TABLE Client (
     Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    FirstName VARCHAR(255) NOT NULL,
-    LastName VARCHAR(255) NOT NULL,
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
     Phone VARCHAR(20) NULL,
     AddressId BIGINT UNSIGNED NULL,
     created_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
@@ -62,7 +63,7 @@ CREATE TABLE Client (
 -- =====================
 CREATE TABLE Category (
     Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(255) NOT NULL UNIQUE,
+    Name VARCHAR(100) NOT NULL UNIQUE,
     created_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6) NULL,
     is_active BOOLEAN DEFAULT TRUE,
@@ -246,11 +247,11 @@ USE FoodBankDB;
 -- ADDRESS
 -- =====================
 INSERT INTO Address (Id, Street, HouseNumber, PostalCode, City) VALUES
-(1, 'Hoofdstraat', '1', '1234AB', 'Utrecht'),
-(2, 'Dorpsweg', '12A', '2345BC', 'Amsterdam'),
-(3, 'Kerklaan', '5', '3456CD', 'Rotterdam'),
-(4, 'Schoolstraat', '22', '4567DE', 'Den Haag'),
-(5, 'Stationsweg', '8', '5678EF', 'Eindhoven');
+(1, 'Hoofdstraat', 1, '1234AB', 'Utrecht'),
+(2, 'Dorpsweg', 12, '2345BC', 'Amsterdam'),
+(3, 'Kerklaan', 5, '3456CD', 'Rotterdam'),
+(4, 'Schoolstraat', 22, '4567DE', 'Den Haag'),
+(5, 'Stationsweg', 8, '5678EF', 'Eindhoven');
 
 -- =====================
 -- USERS (Laravel)
