@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class InventoryController extends Controller
 {
@@ -11,7 +13,9 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        return view('Inventory.inventory');
+        $inventory = DB::select('CALL GetInventory()');
+
+        return view('Inventory.inventory', compact('inventory'));
     }
 
     /**
