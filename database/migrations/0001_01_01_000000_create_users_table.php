@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('rolename')
                 ->nullable(false)
-                ->default('klant');
+                ->default('customer');
             $table->rememberToken();
             $table->timestamps();
         });
