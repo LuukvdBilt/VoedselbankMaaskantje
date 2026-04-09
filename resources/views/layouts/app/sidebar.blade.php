@@ -18,7 +18,15 @@
                     <flux:sidebar.item icon="truck" :href="route('supplier.index')" :current="request()->routeIs('supplier.index')" wire:navigate>
                         {{ __('Leverancier Overzicht') }}
                     </flux:sidebar.item>
+
+                    @if (auth()->user()->rolename === 'admin' || auth()->user()->rolename === 'manager')
+                        <flux:sidebar.item icon="archive-box" :href="route('inventory.index')" :current="request()->routeIs('inventory.*')" wire:navigate>
+                            {{ __('Magazijn') }}
+                        </flux:sidebar.item>
+                        
+                    @endif
                 </flux:sidebar.group>
+                
             </flux:sidebar.nav>
 
             <flux:spacer />
