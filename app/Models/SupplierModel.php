@@ -73,6 +73,21 @@ class SupplierModel extends Model
         }
     }
 
+    public function getSupplierById($id)
+    {
+        try {
+            $result = DB::select('CALL sp_GetSupplierById(?)', [$id]);
+            return $result[0] ?? null;
+        } catch (\Exception $e) {
+            Log::error('Error fetching supplier by ID', [
+                'error' => $e->getMessage(),
+                'id' => $id,
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
+    }
+
     public function contact()
     {
         return $this->belongsTo(ContactModel::class, 'ContactId');

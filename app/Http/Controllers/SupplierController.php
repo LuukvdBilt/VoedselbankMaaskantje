@@ -136,9 +136,13 @@ class SupplierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(SupplierModel $supplier)
+    public function edit(SupplierModel $supplier, $id)
     {
+        $supplier = $this->supplier->getSupplierById($id);
+        
+
         return view('supplier.edit', [
+            'supplier' => $supplier,
         ]);
     }
 
