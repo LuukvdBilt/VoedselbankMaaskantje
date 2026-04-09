@@ -10,8 +10,7 @@ BEGIN
         s.Id,
         CONCAT(a.Street, ' ', a.HouseNumber, ', ', a.PostalCode, ' ', a.City) AS Address,
         c.Phone,
-        c.FirstName,
-        c.LastName,
+        CONCAT(c.FirstName, ' ', c.LastName) AS FullName,
         s.CompanyName
     FROM Supplier s
     LEFT JOIN Contact c ON s.ContactId = c.Id
