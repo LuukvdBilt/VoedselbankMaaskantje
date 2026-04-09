@@ -4,23 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SupplierController extends Controller
 {
     private $SupplierModel;
+
     public function __construct()
     {
-        $this->SupplierModel = new SupplierModel();
+        $this->SupplierModel = new SupplierModel;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = 6;
+        $page = $request->get('page', 1);
 
-        $suppliers = $this->SupplierModel->getAllSuppliers();
-        
-        return view('supplier.index', [
-            'suppliers' => $suppliers
-        ]);
+        $allSuppliers = collect($this->SupplierModel->getAllSuppliers());
+        $offset = ($page - 1) * $perPage;
+        $suppliers = $allSuppliers->slice($offset, $perPage)->values();
+
+        $suppliersPaginated = new LengthAwarePaginator(
+            $suppliers,
+            $allSuppliers->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('supplier.index', ['suppliers' => $suppliersPaginated]);
     }
 
     /**
@@ -28,7 +40,8 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        //
+        return view('supplier.create', [
+        ]);
     }
 
     /**
@@ -69,6 +82,6 @@ class SupplierController extends Controller
      */
     public function destroy(SupplierModel $supplier)
     {
-       //
+        //
     }
 }

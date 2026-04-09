@@ -17,6 +17,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/supplier', [SupplierController::class, 'index']
 )->name('supplier.index');
 
+Route::get('/supplier/create', [SupplierController::class, 'create']
+)->name('supplier.create');
+
+Route::post('/supplier', [SupplierController::class, 'store']
+)->name('supplier.store');
+
 Route::get('/supplier/{id}/edit', [SupplierController::class, 'edit']
 )->name('supplier.edit');
 
