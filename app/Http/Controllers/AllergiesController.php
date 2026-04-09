@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AllergiesModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class AllergiesController extends Controller
 {
@@ -15,121 +16,89 @@ class AllergiesController extends Controller
         $this->AllergiesModel = new AllergiesModel();
     }
 
-    /**
-     * Toon overzicht van alle allergieën.
-     */
     public function index()
     {
         $allergies = $this->AllergiesModel->getAllAllergies();
-
         return view('allergies.index', compact('allergies'));
     }
 
-    /**
-     * Formulier voor nieuwe allergie.
-     */
     public function create()
     {
         return view('allergies.create');
     }
 
-    /**
-     * Sla nieuwe allergie op.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
+            'Name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('Allergies', 'Name'),
+            ],
             'Description' => 'required|string|max:255',
             'TotalFoodPackages' => 'required|integer|min:0',
             'TotalProducts' => 'required|integer|min:0',
+        ], [
+            'Name.unique' => 'Deze allergie bestaat al.',
         ]);
-
-        // Unhappy flow: allergie bestaat al
-        if (AllergiesModel::where('Name', $validated['Name'])->exists()) {
-            return back()
-                ->withInput()
-                ->with('error', 'Deze allergie bestaat al.');
-        }
 
         try {
             AllergiesModel::create($validated);
 
-            Log::info('Nieuwe allergie toegevoegd: ' . $validated['Name']);
-
-            // Happy flow → terug naar create met melding
-            return back()
-                ->with('success', 'Allergie succesvol toegevoegd!');
-
+            return back()->with('success', 'Allergie succesvol toegevoegd!');
         } catch (\Exception $e) {
-            Log::error('Fout bij opslaan allergie: ' . $e->getMessage());
-
             return back()
-                ->with('error', 'Er ging iets mis bij het opslaan van de allergie.')
+                ->withErrors(['error' => 'Er ging iets mis bij het opslaan van de allergie.'])
                 ->withInput();
         }
     }
 
-    /**
-     * Formulier voor bewerken.
-     */
     public function edit($id)
     {
         $allergy = AllergiesModel::findOrFail($id);
-
         return view('allergies.edit', compact('allergy'));
     }
 
-    /**
-     * Update allergie.
-     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'Name' => 'required|string|max:255|unique:Allergies,Name,' . $id . ',Id',
+            'Name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('Allergies', 'Name')->ignore($id, 'Id'),
+            ],
             'Description' => 'required|string|max:255',
             'TotalFoodPackages' => 'required|integer|min:0',
             'TotalProducts' => 'required|integer|min:0',
+        ], [
+            'Name.unique' => 'Deze allergie bestaat al.',
         ]);
 
         try {
             $allergy = AllergiesModel::findOrFail($id);
             $allergy->update($validated);
 
-            Log::info('Allergie bijgewerkt: ' . $allergy->Name);
-
-            return redirect()
-                ->route('allergies.index')
-                ->with('success', 'Allergie succesvol bijgewerkt.');
-
+            return back()->with('success', 'Allergie succesvol bijgewerkt!');
         } catch (\Exception $e) {
-            Log::error('Fout bij updaten allergie: ' . $e->getMessage());
-
             return back()
-                ->with('error', 'Er ging iets mis bij het bijwerken van de allergie.')
+                ->withErrors(['error' => 'Er ging iets mis bij het bijwerken van de allergie.'])
                 ->withInput();
         }
     }
 
-    /**
-     * Verwijder allergie.
-     */
     public function destroy($id)
     {
         try {
             $allergy = AllergiesModel::findOrFail($id);
             $allergy->delete();
 
-            Log::warning('Allergie verwijderd: ' . $allergy->Name);
-
             return redirect()
                 ->route('allergies.index')
                 ->with('success', 'Allergie succesvol verwijderd.');
-
         } catch (\Exception $e) {
-            Log::error('Fout bij verwijderen allergie: ' . $e->getMessage());
-
-            return back()->with('error', 'Er ging iets mis bij het verwijderen van de allergie.');
+            return back()->withErrors(['error' => 'Er ging iets mis bij het verwijderen van de allergie.']);
         }
     }
 }
