@@ -20,14 +20,15 @@ class FoodpackageModel extends Model
      * Relatie: voedselpakket heeft meerdere allergieën.
      */
     public function allergies()
-    {
-        return $this->belongsToMany(
-            AllergiesModel::class,
-            'FoodPackage_Allergies',
-            'FoodPackageId',
-            'AllergiesId'
-        );
-    }
+{
+    return $this->belongsToMany(
+        AllergiesModel::class,
+        'FoodPackage_Allergies',
+        'FoodPackageId',
+        'AllergiesId'
+    );
+}
+
 
     /**
      * Relatie: voedselpakket bevat meerdere producten.

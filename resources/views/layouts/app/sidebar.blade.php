@@ -19,7 +19,14 @@
                     <flux:sidebar.item icon="exclamation-triangle" :href="route('allergies')" :current="request()->routeIs('allergies')" wire:navigate>
                         {{ __('Allergieën') }}
                     </flux:sidebar.item>
+                    @if (auth()->user()->rolename === 'admin' || auth()->user()->rolename === 'manager')
+                        <flux:sidebar.item icon="archive-box" :href="route('inventory.index')" :current="request()->routeIs('inventory.*')" wire:navigate>
+                            {{ __('Magazijn') }}
+                        </flux:sidebar.item>
+                        
+                    @endif
                 </flux:sidebar.group>
+                
             </flux:sidebar.nav>
 
             <flux:spacer />

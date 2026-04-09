@@ -16,13 +16,10 @@ class AllergiesModel extends Model
         'note'
     ];
 
-    /**
-     * Relatie: een allergie hoort bij meerdere voedselpakketten.
-     */
     public function foodPackages()
     {
         return $this->belongsToMany(
-            FoodPackage::class,
+            FoodpackageModel::class,
             'FoodPackage_Allergies',
             'AllergiesId',
             'FoodPackageId'
