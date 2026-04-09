@@ -15,7 +15,15 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+
+                    @if (auth()->user()->rolename === 'admin' || auth()->user()->rolename === 'manager')
+                        <flux:sidebar.item icon="archive-box" :href="route('inventory.index')" :current="request()->routeIs('inventory.*')" wire:navigate>
+                            {{ __('Magazijn') }}
+                        </flux:sidebar.item>
+                        
+                    @endif
                 </flux:sidebar.group>
+                
             </flux:sidebar.nav>
 
             <flux:spacer />

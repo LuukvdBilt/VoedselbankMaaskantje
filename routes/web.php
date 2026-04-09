@@ -9,6 +9,7 @@ Route::get('/magazijn', [InventoryController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::resource('inventory', InventoryController::class);
 });
 
 
