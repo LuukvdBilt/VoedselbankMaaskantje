@@ -1,49 +1,56 @@
 DELIMITER $$
 
-CREATE PROCEDURE updateInventory(
-    IN p_InventoryId INT,
+CREATE PROCEDURE UpdateInventory(
+    IN p_InventoryId BIGINT,
     IN p_ProductName VARCHAR(255),
-    IN p_Barcode VARCHAR(255),
+    IN p_Barcode VARCHAR(100),
     IN p_Category VARCHAR(255),
     IN p_Supplier VARCHAR(255),
     IN p_Quantity INT,
-    IN p_ExpirationDate DATE,
-    IN p_InventoryNote TEXT,
-    IN p_ProductNote TEXT
+    IN p_ExpirationDate DATETIME,
+    IN p_InventoryNote VARCHAR(255),
+    IN p_ProductNote VARCHAR(255)
 )
 BEGIN
-    -- Update product info
+    DECLARE v_ProductId BIGINT;
+    DECLARE v_CategoryId BIGINT;
+    DECLARE v_SupplierId BIGINT;
+
+    -- Haal IDs op
+    SELECT ProductId, SupplierId INTO v_ProductId, v_SupplierId
+    FROM Inventory
+    WHERE Id = p_InventoryId;
+
+    SELECT CategoryId INTO v_CategoryId
+    FROM Product
+    WHERE Id = v_ProductId;
+
+    -- Update product
     UPDATE Product
     SET 
-        Name = p_ProductName,
+        ProductName = p_ProductName,
         Barcode = p_Barcode,
-        Note = p_ProductNote
-    WHERE Id = (
-        SELECT ProductId FROM Inventory WHERE Id = p_InventoryId
-    );
+        note = p_ProductNote
+    WHERE Id = v_ProductId;
 
     -- Update category
     UPDATE Category
     SET Name = p_Category
-    WHERE Id = (
-        SELECT CategoryId FROM Product 
-        WHERE Id = (SELECT ProductId FROM Inventory WHERE Id = p_InventoryId)
-    );
+    WHERE Id = v_CategoryId;
 
     -- Update supplier
     UPDATE Supplier
-    SET Name = p_Supplier
-    WHERE Id = (
-        SELECT SupplierId FROM Inventory WHERE Id = p_InventoryId
-    );
+    SET CompanyName = p_Supplier
+    WHERE Id = v_SupplierId;
 
-    -- Update inventory record
+    -- Update inventory
     UPDATE Inventory
     SET 
         Quantity = p_Quantity,
         ExpirationDate = p_ExpirationDate,
-        Note = p_InventoryNote
+        note = p_InventoryNote
     WHERE Id = p_InventoryId;
+
 END $$
 
 DELIMITER ;

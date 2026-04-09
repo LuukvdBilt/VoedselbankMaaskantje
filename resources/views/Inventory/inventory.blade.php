@@ -1,8 +1,13 @@
 <x-layouts::app :title="__('Magazijn')">
     <div class="container mx-auto px-4 py-8 dark:bg-gray-900">
-        <div class="mb-6">
+        <div class="mb-6 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-gray-800 dark:text-green-400">{{ __('Magazijn') }}</h1>
+            <a href="{{ route('inventory.create') }}" class="inline-flex items-center justify-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-sm font-medium">
+                {{ __('Product Toevoegen') }}
+            </a>
         </div>
+
+
 
         @if ($inventory && count($inventory) > 0)
             <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
