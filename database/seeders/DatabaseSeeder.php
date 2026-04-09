@@ -51,6 +51,10 @@ class DatabaseSeeder extends Seeder
             ContactSeeder::class,
             SupplierSeeder::class,
             AddressSeeder::class,
+            AllergiesSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
+            InventorySeeder::class,
         ]);
     }
 }
