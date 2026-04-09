@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    <form action="{{ isset($order) ? route('customers.orders.update', [$client->Id, $order->Id]) : route('customers.orders.store', $client->Id) }}" method="POST" class="bg-white rounded-lg shadow p-8">
+    <form action="{{ isset($order) ? route('customersorders.update', [$client->Id, $order->Id]) : route('customersorders.store', $client->Id) }}" method="POST" class="bg-white rounded-lg shadow p-8">
         @csrf
         @if (isset($order))
             @method('PUT')
@@ -43,7 +43,7 @@
             <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-8 py-2 rounded font-medium transition">
                 {{ isset($order) ? 'Bijwerken' : 'Bestelling plaatsen' }}
             </button>
-            <a href="{{ route('customers.orders.index', $client->Id) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-2 rounded font-medium transition">
+            <a href="{{ route('customersorders.index', $client->Id) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-2 rounded font-medium transition">
                 Annuleren
             </a>
         </div>

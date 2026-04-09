@@ -2,134 +2,51 @@
 
 namespace App\Http\Controllers;
 
-// app/Http/Controllers/CustomerOrderController.php
-
 use App\Models\Client;
 use App\Models\FoodPackageDistribution;
-use App\Models\FoodPackage;
 use Illuminate\Http\Request;
 
 class CustomerOrderController extends Controller
 {
-    // Show all orders for a customer
     public function index($clientId)
     {
-        $client = Client::getClientById($clientId);
+        $client = Client::findOrFail($clientId);
+        
+        // Get distributions for this client's household
+        $distributions = FoodPackageDistribution::whereHas('household', function ($query) use ($clientId) {
+            $query->where('ClientId', $clientId);
+        })->with('foodPackage', 'household')->get();
 
-        if (!$client) {
-            return view('errors.404', ['message' => 'Deze pagina bestaat niet.']);
-        }
-
-        $orders = FoodPackageDistribution::getHouseholdDistributions($client->HouseholdId);
-
-        return view('customers.orders.index', [
+        return view('customersorders.index', [
             'client' => $client,
-            'orders' => $orders
+            'distributions' => $distributions
         ]);
     }
 
-    // Show create order form
     public function create($clientId)
     {
-        $client = Client::getClientById($clientId);
-
-        if (!$client) {
-            return view('errors.404', ['message' => 'Deze pagina bestaat niet.']);
-        }
-
-        $packages = FoodPackage::getAllPackages();
-
-        return view('customers.orders.create', [
-            'client' => $client,
-            'packages' => $packages
-        ]);
+        $client = Client::findOrFail($clientId);
+        return view('customersorders.create', ['client' => $client]);
     }
 
-    // Store new order
     public function store(Request $request, $clientId)
     {
-        $client = Client::getClientById($clientId);
-
-        if (!$client) {
-            return back()->withErrors(['error' => 'Klant niet gevonden.']);
-        }
-
         $validated = $request->validate([
-            'food_package_id' => 'required|integer'
-        ], [
-            'food_package_id.required' => 'Selecteer een voedselpakket.'
+            'food_package_id' => 'required|exists:FoodPackage,Id',
+            'quantity' => 'required|integer|min:1',
         ]);
 
-        $orderId = FoodPackageDistribution::createDistribution(
-            $client->HouseholdId,
-            $validated['food_package_id']
-        );
+        $household = Household::where('ClientId', $clientId)->firstOrFail();
 
-        if ($orderId) {
-            return redirect()->route('customers.orders.index', $clientId)
-                ->with('success', 'Bestelling succesvol aangemaakt!');
-        }
-
-        return back()->withErrors(['error' => 'De ingevulde gegevens zijn niet geldig. Vul alle verplichte velden in.']);
-    }
-
-    // Show edit order form
-    public function edit($clientId, $orderId)
-    {
-        $client = Client::getClientById($clientId);
-
-        if (!$client) {
-            return view('errors.404', ['message' => 'Deze pagina bestaat niet.']);
-        }
-
-        $order = FoodPackageDistribution::find($orderId);
-
-        if (!$order || $order->HouseholdId != $client->HouseholdId) {
-            return view('errors.404', ['message' => 'Bestelling niet gevonden.']);
-        }
-
-        $packages = FoodPackage::getAllPackages();
-
-        return view('customers.orders.edit', [
-            'client' => $client,
-            'order' => $order,
-            'packages' => $packages
-        ]);
-    }
-
-    // Update order
-    public function update(Request $request, $clientId, $orderId)
-    {
-        $validated = $request->validate([
-            'food_package_id' => 'required|integer'
-        ], [
-            'food_package_id.required' => 'Selecteer een voedselpakket.'
+        FoodPackageDistribution::create([
+            'HouseholdId' => $household->Id,
+            'FoodPackageId' => $validated['food_package_id'],
+            'DistributionDate' => now(),
+            'Quantity' => $validated['quantity'],
+            'is_active' => true,
         ]);
 
-        $success = FoodPackageDistribution::updateDistribution(
-            $orderId,
-            $validated['food_package_id'],
-            $request->input('note')
-        );
-
-        if ($success) {
-            return redirect()->route('customers.orders.index', $clientId)
-                ->with('success', 'Bestelling succesvol bijgewerkt!');
-        }
-
-        return back()->withErrors(['error' => 'De ingevulde gegevens zijn niet geldig. Vul alle verplichte velden in.']);
-    }
-
-    // Delete order
-    public function destroy($clientId, $orderId)
-    {
-        $success = FoodPackageDistribution::deleteDistribution($orderId);
-
-        if ($success) {
-            return redirect()->route('customers.orders.index', $clientId)
-                ->with('success', 'Bestelling verwijderd.');
-        }
-
-        return back()->withErrors(['error' => 'Bestelling kon niet worden verwijderd.']);
+        return redirect()->route('customersorders.index', $clientId)
+            ->with('success', 'Bestelling succesvol geplaatst!');
     }
 }

@@ -1,15 +1,13 @@
-// app/Models/Household.php
-
 <?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ContactModel;
 
 class Household extends Model
 {
     protected $table = 'Household';
+    protected $primaryKey = 'Id';
     public $timestamps = true;
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
@@ -24,7 +22,9 @@ class Household extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
-        'RegistrationDate' => 'datetime'
+        'RegistrationDate' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     public function client()
@@ -35,10 +35,5 @@ class Household extends Model
     public function members()
     {
         return $this->hasMany(HouseholdMember::class, 'HouseholdId', 'Id');
-    }
-
-    public function distributions()
-    {
-        return $this->hasMany(FoodPackageDistribution::class, 'HouseholdId', 'Id');
     }
 }

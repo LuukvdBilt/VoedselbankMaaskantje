@@ -2,28 +2,33 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AddressModel extends Model
+class Address extends Model
 {
-    use HasFactory;
-
     protected $table = 'Address';
+    protected $primaryKey = 'Id';
+    public $timestamps = true;
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
 
     protected $fillable = [
         'Street',
-        'City',
-        'State',
+        'HouseNumber',
         'PostalCode',
-        'Country',
+        'City',
         'is_active',
-        'note',
+        'note'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
+
+    public function clients()
+    {
+        return $this->hasMany(Client::class, 'AddressId', 'Id');
+    }
 }

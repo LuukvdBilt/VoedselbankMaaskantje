@@ -10,16 +10,25 @@
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
-            <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="truck" :href="route('supplier.index')" :current="request()->routeIs('supplier.index')" wire:navigate>
-                        {{ __('Leverancier Overzicht') }}
-                    </flux:sidebar.item>
-                </flux:sidebar.group>
-            </flux:sidebar.nav>
+<flux:sidebar.nav>
+    <flux:sidebar.group :heading="__('Platform')" class="grid">
+        <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+            {{ __('Dashboard') }}
+        </flux:sidebar.item>
+        <flux:sidebar.item icon="truck" :href="route('supplier.index')" :current="request()->routeIs('supplier.index')" wire:navigate>
+            {{ __('Leverancier Overzicht') }}
+        </flux:sidebar.item>
+        <flux:sidebar.item icon="truck" :href="route('customersregistration.index')" :current="request()->routeIs('customersregistration.index')" wire:navigate>
+            {{ __('Klantregistratie') }}
+        </flux:sidebar.item>
+        <flux:sidebar.item icon="shopping-bag" :href="route('customersorders.index', auth()->user()->id)" :current="request()->routeIs('customersorders.*')" wire:navigate>
+            {{ __('Mijn Bestellingen') }}
+        </flux:sidebar.item>
+        <flux:sidebar.item icon="plus" :href="route('customersorders.create', auth()->user()->id)" :current="request()->routeIs('customersorders.create')" wire:navigate>
+            {{ __('Nieuw Pakket Bestellen') }}
+        </flux:sidebar.item>
+    </flux:sidebar.group>
+</flux:sidebar.nav>
 
             <flux:spacer />
 
