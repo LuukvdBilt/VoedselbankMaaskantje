@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ContactSeeder::class,
             SupplierSeeder::class,
-            AddressModelSeeder::class,
+            AddressSeeder::class,
         ]);
     }
 }

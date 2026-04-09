@@ -14,8 +14,8 @@ BEGIN
         c.LastName,
         s.CompanyName
     FROM Supplier s
-    JOIN Contact c ON s.ContactId = c.Id
-    JOIN Address a ON c.AddressId = a.Id;
+    LEFT JOIN Contact c ON s.ContactId = c.Id
+    LEFT JOIN Address a ON c.AddressId = a.Id;
 END$$
 
 DELIMITER ;
