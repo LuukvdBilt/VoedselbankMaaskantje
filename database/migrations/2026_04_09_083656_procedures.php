@@ -10,8 +10,24 @@ return new class extends Migration
      */
     public function up(): void
     {
+<<<<<<< HEAD
         DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers;');
+=======
+        /*
+        |--------------------------------------------------------------------------
+        | DROP bestaande procedures
+        |--------------------------------------------------------------------------
+        */
+        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllSuppliers;");
+        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllAllergies;");
+        DB::statement("DROP PROCEDURE IF EXISTS GetInventory;");
+>>>>>>> 866e6c5ef364dbe1f18128424fba806597dd37ec
 
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE sp_getAllSuppliers
+        |--------------------------------------------------------------------------
+        */
         DB::statement("
             CREATE PROCEDURE sp_getAllSuppliers()
             BEGIN
@@ -29,6 +45,7 @@ return new class extends Migration
             END;
         ");
 
+<<<<<<< HEAD
         DB::statement('DROP PROCEDURE IF EXISTS sp_createSupplier;');
 
         DB::statement('
@@ -86,6 +103,58 @@ return new class extends Migration
                 WHERE s.Id = v_SupplierId;
             END;
         ');
+=======
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE sp_getAllAllergies (met JOINs zoals verplicht)
+        |--------------------------------------------------------------------------
+        */
+        DB::statement("
+            CREATE PROCEDURE sp_getAllAllergies()
+            BEGIN
+                SELECT 
+                    a.Id,
+                    a.Name,
+                    a.Description,
+                    COUNT(DISTINCT fpa.FoodPackageId) AS TotalFoodPackages,
+                    COUNT(DISTINCT fpp.ProductId) AS TotalProducts
+                FROM Allergies a
+                LEFT JOIN FoodPackage_Allergies fpa
+                    ON fpa.AllergiesId = a.Id
+                LEFT JOIN FoodPackage_Products fpp
+                    ON fpp.FoodPackageId = fpa.FoodPackageId
+                GROUP BY a.Id, a.Name, a.Description
+                ORDER BY a.Name;
+            END;
+        ");
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE GetInventory
+        |--------------------------------------------------------------------------
+        */
+        DB::statement("
+            CREATE PROCEDURE GetInventory()
+            BEGIN
+                SELECT 
+                    i.Id AS InventoryId,
+                    p.ProductName,
+                    p.Barcode,
+                    c.Name AS Category,
+                    s.CompanyName AS Supplier,
+                    i.Quantity,
+                    i.ExpirationDate,
+                    i.note AS InventoryNote,
+                    p.note AS ProductNote
+                FROM Inventory i
+                INNER JOIN Product p ON i.ProductId = p.Id
+                INNER JOIN Category c ON p.CategoryId = c.Id
+                LEFT JOIN Supplier s ON i.SupplierId = s.Id
+                WHERE i.is_active = 1
+                ORDER BY p.ProductName;
+            END;
+        ");
+>>>>>>> 866e6c5ef364dbe1f18128424fba806597dd37ec
     }
 
     /**
@@ -93,7 +162,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+<<<<<<< HEAD
         DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers');
         DB::statement('DROP PROCEDURE IF EXISTS sp_createSupplier;');
+=======
+        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllSuppliers;");
+        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllAllergies;");
+        DB::statement('DROP PROCEDURE IF EXISTS GetAllSuppliers');
+        DB::statement('DROP PROCEDURE IF EXISTS GetInventory');
+>>>>>>> 866e6c5ef364dbe1f18128424fba806597dd37ec
     }
 };

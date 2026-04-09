@@ -114,6 +114,21 @@ class SupplierModel extends Model
         }
     }
 
+    public function deleteSupplier($id): bool
+    {
+        try {
+            DB::statement('CALL sp_deleteSupplier(?)', [$id]);
+            Log::info('Supplier deleted successfully', ['id' => $id]);
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Error deleting supplier', [
+                'error' => $e->getMessage(),
+                'id' => $id,
+            ]);
+            return false;
+        }
+    }
+
     public function contact()
     {
         return $this->belongsTo(ContactModel::class, 'ContactId');

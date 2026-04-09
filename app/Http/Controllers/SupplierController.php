@@ -266,8 +266,30 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SupplierModel $supplier)
+    public function destroy(SupplierModel $supplier, $id)
     {
-        //
+        try {
+            if (!$supplier) {
+                Log::warning('Attempt to delete non-existent supplier', ['supplier_id' => $supplier->id]);
+
+                return redirect()->route('supplier.index')->with('error', 'Leverancier niet gevonden.');
+            }
+
+            $this->supplier->deleteSupplier($id);
+
+
+            Log::info('Supplier deleted successfully', ['supplier_id' => $supplier->id]);
+
+            return redirect()->route('supplier.index')
+                ->with('success', 'Leverancier succesvol verwijderd.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting supplier', [
+                'error' => $e->getMessage(),
+                'supplier_id' => $supplier->id,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het verwijderen van de leverancier.');
+        }
     }
 }

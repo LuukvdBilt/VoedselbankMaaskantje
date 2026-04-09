@@ -26,8 +26,11 @@
                         {{ __('Magazijn') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="truck" :href="route('supplier.index')"
-                        :current="request()->routeIs('supplier.index')" wire:navigate>
+                    <flux:sidebar.item icon="archive-box" :href="route('allergies.index')"
+                        :current="request()->routeIs('allergies.*')" wire:navigate>
+                        {{ __('Allergieën') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="truck" :href="route('supplier.index')" :current="request()->routeIs('supplier.index')" wire:navigate>
                         {{ __('Leverancier Overzicht') }}
                     </flux:sidebar.item>                
                 @endif

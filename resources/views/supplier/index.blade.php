@@ -3,15 +3,20 @@
         <div
             class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <h1 class="px-6 py-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">Leverancier Overzicht</h1>
-            <a href="{{ route('supplier.create') }}" class="ml-6 m-4  inline-block rounded-md bg-green-500 px-4 py-2 text-white hover:bg-green-600">Nieuwe Leverancier</a>
+            <a href="{{ route('supplier.create') }}"
+                class="ml-6 m-4  inline-block rounded-md bg-green-500 px-4 py-2 text-white hover:bg-green-600">Nieuwe
+                Leverancier</a>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     @if (session('success'))
                         <div class="mb-4 rounded-md bg-green-50 p-4">
                             <div class="flex">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 000-1.414-1.414L9 10.586 7.707 9.293a1 1 000-1.414-1.414L8.293 11.293a1 1 000 1.414l2 2z" clip-rule="evenodd" />
+                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 000-1.414-1.414L9 10.586 7.707 9.293a1 1 000-1.414-1.414L8.293 11.293a1 1 000 1.414l2 2z"
+                                            clip-rule="evenodd" />
                                     </svg>
                                 </div>
                                 <div class="ml-3">
@@ -23,8 +28,11 @@
                         <div class="mb-4 rounded-md bg-red-50 p-4">
                             <div class="flex">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1.707-9.707a1 1 000-1.414L10.586 9l-2.293-2.293a1 1 000-1.414L9.293 10l2.293 2.293a1 1 000 1.414z" clip-rule="evenodd" />
+                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                        fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1.707-9.707a1 1 000-1.414L10.586 9l-2.293-2.293a1 1 000-1.414L9.293 10l2.293 2.293a1 1 000 1.414z"
+                                            clip-rule="evenodd" />
                                     </svg>
                                 </div>
                                 <div class="ml-3">
@@ -67,8 +75,16 @@
                                         class="text-blue-500 hover:text-blue-700">Wijzigen</a>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="{{ route('supplier.destroy', $supplier->Id) }}"
-                                        class="text-red-500 hover:text-red-700">Verwijderen</a>
+                                    {{-- Open modal met extra bevestiging om onbedoeld verwijderen te voorkomen. --}}
+                                    <form method="POST" action="{{ route('supplier.destroy', $supplier->Id) }}"
+                                        onsubmit="return confirm('Weet u zeker dat u deze leverancier wilt verwijderen?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type=""
+                                            class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
+                                            Verwijderen
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
