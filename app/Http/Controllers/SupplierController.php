@@ -269,10 +269,20 @@ class SupplierController extends Controller
     public function destroy(SupplierModel $supplier, $id)
     {
         try {
+
+
             if (!$supplier) {
                 Log::warning('Attempt to delete non-existent supplier', ['supplier_id' => $supplier->id]);
 
                 return redirect()->route('supplier.index')->with('error', 'Leverancier niet gevonden.');
+            }
+
+            $isActive = SupplierModel::where('id', $id)->value('is_active') ?? 0;
+
+            if ($isActive === true || $isActive === 1) {
+                Log::warning('Attempt to delete active supplier', ['supplier_id' => $id]);
+
+                return redirect()->route('supplier.index')->with('error', 'Leverancier is inactief en kan niet worden verwijderd, omdat deze leverancier nogsteeds bij ons actief is.');
             }
 
             $this->supplier->deleteSupplier($id);
