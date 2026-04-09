@@ -39,18 +39,27 @@ class AllergiesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'Name' => 'required|string|max:255|unique:Allergies,Name',
+            'Name' => 'required|string|max:255',
             'Description' => 'required|string|max:255',
+            'TotalFoodPackages' => 'required|integer|min:0',
+            'TotalProducts' => 'required|integer|min:0',
         ]);
+
+        // Unhappy flow: allergie bestaat al
+        if (AllergiesModel::where('Name', $validated['Name'])->exists()) {
+            return back()
+                ->withInput()
+                ->with('error', 'Deze allergie bestaat al.');
+        }
 
         try {
             AllergiesModel::create($validated);
 
-            Log::info('Nieuwe allergie toegevoegd: ' . $request->Name);
+            Log::info('Nieuwe allergie toegevoegd: ' . $validated['Name']);
 
-            return redirect()
-                ->route('allergies.index')
-                ->with('success', 'Allergie succesvol toegevoegd.');
+            // Happy flow → terug naar create met melding
+            return back()
+                ->with('success', 'Allergie succesvol toegevoegd!');
 
         } catch (\Exception $e) {
             Log::error('Fout bij opslaan allergie: ' . $e->getMessage());
@@ -79,6 +88,8 @@ class AllergiesController extends Controller
         $validated = $request->validate([
             'Name' => 'required|string|max:255|unique:Allergies,Name,' . $id . ',Id',
             'Description' => 'required|string|max:255',
+            'TotalFoodPackages' => 'required|integer|min:0',
+            'TotalProducts' => 'required|integer|min:0',
         ]);
 
         try {

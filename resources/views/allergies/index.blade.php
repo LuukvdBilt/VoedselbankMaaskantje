@@ -83,4 +83,12 @@
         </div>
 
     </div>
+{{-- $user = new App\Models\User;
+$user->name = 'Admin';
+$user->email = 'admin@maaskantje.com';
+$user->password = bcrypt('achraf123');
+$user->rolename = 'admin';
+$user->save(); --}}
 </x-layouts::app>
+
+
