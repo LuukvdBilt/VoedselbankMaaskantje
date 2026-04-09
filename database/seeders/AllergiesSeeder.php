@@ -9,6 +9,7 @@ class AllergiesSeeder extends Seeder
 {
     public function run(): void
     {
+        // Vaste startset met veelvoorkomende allergieën voor lokale ontwikkeling en tests.
         $allergies = [
             ['Name' => 'Gluten', 'Description' => 'Allergie voor glutenbevattende granen'],
             ['Name' => 'Lactose', 'Description' => 'Allergie of intolerantie voor melkproducten'],
@@ -20,6 +21,7 @@ class AllergiesSeeder extends Seeder
         ];
 
         foreach ($allergies as $item) {
+            // Maak per item een record aan zodat de seeder idempotent gedrag via DB-opschoning kan volgen.
             AllergiesModel::create($item);
         }
     }
