@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Controllers\InventoryController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\SupplierController;
 
 Route::view('/', 'welcome')->name('home');
 
+Route::get('/magazijn', [InventoryController::class, 'index']);
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::resource('inventory', InventoryController::class)->middleware('role:admin,manager');
 });
 
 //supplier routes
