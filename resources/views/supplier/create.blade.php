@@ -2,134 +2,93 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div
             class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-            <h1 class="px-6 py-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">Nieuwe Leverancier</h1>
 
-            @if (session('success'))
-                <div class="mb-4 rounded-md bg-green-50 p-4">
-                    <div class="flex">
-                        <div class="ml-3">
-                            <p class="text-lg font-medium text-green-800">{{ session('success') }}</p>
-                        </div>
-                    </div>
-                </div>
-            @elseif (session('error'))
+            <h1 class="px-6 py-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">
+                Nieuwe Leverancier
+            </h1>
+
+            @if (session('error'))
                 <div class="mb-4 rounded-md bg-red-50 p-4">
-                    <div class="flex">
-                        <div class="ml-3">
-                            <p class="text-lg font-medium text-red-800">{{ session('error') }}</p>
-                        </div>
-                    </div>
+                    <p class="text-lg font-medium text-red-800">{{ session('error') }}</p>
                 </div>
             @endif
 
             <form action="{{ route('supplier.store') }}" method="POST" class="space-y-6 px-6 py-4">
                 @csrf
 
+                {{-- Bedrijfsnaam --}}
                 <div>
-                    <label for="CompanyName" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Bedrijfsnaam
-                    </label>
+                    <label for="CompanyName" class="block text-sm font-semibold">Bedrijfsnaam</label>
                     <input type="text" name="CompanyName" id="CompanyName" value="{{ old('CompanyName') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('CompanyName') border-red-500 @enderror"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('CompanyName') border-red-500 @enderror"
                         required>
-                    @error('CompanyName')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
+
+                {{-- Email --}}
                 <div>
-                    <label for="Email" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Emailadres
-                    </label>
+                    <label for="Email" class="block text-sm font-semibold">Emailadres</label>
                     <input type="email" name="Email" id="Email" value="{{ old('Email') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('Email') border-red-500 @enderror"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('Email') border-red-500 @enderror"
                         required>
-                    @error('Email')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
+                {{-- Telefoon --}}
                 <div>
-                    <label for="Phone" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Mobiel
-                    </label>
+                    <label for="Phone" class="block text-sm font-semibold">Mobiel</label>
                     <input type="tel" name="Phone" id="Phone" value="{{ old('Phone') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('Phone') border-red-500 @enderror"
+                        placeholder="0612345678 of +31612345678" pattern="^(\+31|0)(6|1|2|3|4|5|7|8|9)[0-9]{8}$"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('Phone') border-red-500 @enderror"
                         required>
-                    @error('Phone')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
+                {{-- Voornaam --}}
                 <div>
-                    <label for="FirstName" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Voornaam
-                    </label>
+                    <label for="FirstName" class="block text-sm font-semibold">Voornaam</label>
                     <input type="text" name="FirstName" id="FirstName" value="{{ old('FirstName') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('FirstName') border-red-500 @enderror"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('FirstName') border-red-500 @enderror"
                         required>
-                    @error('FirstName')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
+                {{-- Achternaam --}}
                 <div>
-                    <label for="LastName" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Achternaam
-                    </label>
+                    <label for="LastName" class="block text-sm font-semibold">Achternaam</label>
                     <input type="text" name="LastName" id="LastName" value="{{ old('LastName') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('LastName') border-red-500 @enderror"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('LastName') border-red-500 @enderror"
                         required>
-                    @error('LastName')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
+                {{-- Straat --}}
                 <div>
-                    <label for="Street" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Straat
-                    </label>
+                    <label for="Street" class="block text-sm font-semibold">Straat</label>
                     <input type="text" name="Street" id="Street" value="{{ old('Street') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('Street') border-red-500 @enderror"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('Street') border-red-500 @enderror"
                         required>
-                    @error('Street')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
+                {{-- Huisnummer --}}
                 <div>
-                    <label for="HouseNumber" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Huisnummer
-                    </label>
-                    <input type="number" name="HouseNumber" id="HouseNumber" value="{{ old('HouseNumber') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('HouseNumber') border-red-500 @enderror"
+                    <label for="HouseNumber" class="block text-sm font-semibold">Huisnummer</label>
+                    <input type="number" name="HouseNumber" id="HouseNumber" value="{{ old('HouseNumber') }}" min="1"
+                        max="9999"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('HouseNumber') border-red-500 @enderror"
                         required>
-                    @error('HouseNumber')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
+                {{-- Postcode --}}
                 <div>
-                    <label for="PostalCode" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Postcode
-                    </label>
+                    <label for="PostalCode" class="block text-sm font-semibold">Postcode</label>
                     <input type="text" name="PostalCode" id="PostalCode" value="{{ old('PostalCode') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('PostalCode') border-red-500 @enderror"
+                        placeholder="1234AB" pattern="^[1-9][0-9]{3}\s?[A-Za-z]{2}$"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('PostalCode') border-red-500 @enderror"
                         required>
-                    @error('PostalCode')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
+                {{-- Plaats --}}
                 <div>
-                    <label for="City" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Plaats
-                    </label>
+                    <label for="City" class="block text-sm font-semibold">Plaats</label>
                     <input type="text" name="City" id="City" value="{{ old('City') }}"
-                        class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('City') border-red-500 @enderror"
+                        class="mt-2 w-full rounded-md border px-3 py-2 @error('City') border-red-500 @enderror"
                         required>
-                    @error('City')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="flex gap-3">

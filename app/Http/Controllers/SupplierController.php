@@ -74,44 +74,54 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validate incoming request data
             $validated = $request->validate([
                 'CompanyName' => 'required|string|max:255',
                 'FirstName' => 'required|string|max:255',
                 'LastName' => 'required|string|max:255',
                 'Email' => 'required|email|max:255',
-                'Phone' => 'required|string|max:255',
+                //validate Dutch phone numbers (starting with +31 or 0, followed by 9 digits)
+                'Phone' => [
+                    'required',
+                    'regex:/^(\+31|0)(6|1|2|3|4|5|7|8|9)[0-9]{8}$/',
+                ],
                 'Street' => 'required|string|max:255',
-                'HouseNumber' => 'required|integer',
-                'PostalCode' => 'required|string',
+                'HouseNumber' => 'required|integer|min:1|max:9999',
+                'PostalCode' => [
+                    'required',
+                    'regex:/^[1-9][0-9]{3}\s?[A-Za-z]{2}$/',
+                ],
                 'City' => 'required|string|max:255',
+            ], [
+                'PostalCode.regex' => 'Gebruik een geldige Nederlandse postcode (1234AB).',
+                'Phone.regex' => 'Gebruik een geldig Nederlands telefoonnummer.',
             ]);
 
-            // Check if contact with same first name already exists
-            $contactExists = ContactModel::where('FirstName', $validated['FirstName'])
+            $validated['PostalCode'] = strtoupper(str_replace(' ', '', $validated['PostalCode']));
+
+            $exists = ContactModel::where('FirstName', $validated['FirstName'])
                 ->where('LastName', $validated['LastName'])
+                ->where('Phone', $validated['Phone'])
                 ->exists();
 
-            if ($contactExists) {
-                Log::warning('Duplicate supplier attempt', ['firstName' => $validated['FirstName'], 'lastName' => $validated['LastName']]);
-
-                return redirect()->back()->with('error', 'Deze leverancier is al bekend bij ons. Controleer de gegevens en probeer het opnieuw.');
+            if ($exists) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Deze leverancier bestaat al.');
             }
 
-            // Create new supplier
             $this->supplier->createSupplier($validated);
 
-            Log::info('Supplier created successfully', ['companyName' => $validated['CompanyName']]);
+            return redirect()->route('supplier.index')
+                ->with('success', 'Leverancier succesvol aangemaakt.');
 
-            return redirect()->route('supplier.index')->with('success', 'Leverancier succesvol aangemaakt.');
         } catch (ValidationException $e) {
-            Log::warning('Validation failed for supplier creation', ['errors' => $e->errors()]);
-
             throw $e;
         } catch (\Exception $e) {
             Log::error('Error creating supplier', ['error' => $e->getMessage()]);
 
-            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van de leverancier.');
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Er is een fout opgetreden.');
         }
     }
 
