@@ -2,7 +2,6 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div
             class="relative mx-auto w-full max-w-2xl overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-
             <h1 class="px-6 py-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">
                 Leverancier bewerken
             </h1>
@@ -13,7 +12,8 @@
                 </div>
             @endif
 
-            <form action="{{ route('supplier.update', ['id' => $supplier->Id]) }}" method="POST" class="space-y-6 px-6 py-4">
+            <form action="{{ route('supplier.update', ['id' => $supplier->Id]) }}" method="POST"
+                class="space-y-6 px-6 py-4">
                 @csrf
                 @method('PUT')
 
@@ -82,7 +82,7 @@
                     <label for="PostalCode" class="block text-sm font-semibold">Postcode</label>
                     <input type="text" name="PostalCode" id="PostalCode"
                         value="{{ old('PostalCode', $supplier->PostalCode) }}" placeholder="1234AB"
-                        pattern="^[1-9][0-9]{3}\s?[A-Za-z]{2}$"
+                        pattern="^[1-9][0-9]{3}[A-Za-z]{2}$"
                         class="mt-2 w-full rounded-md border px-3 py-2 @error('PostalCode') border-red-500 @enderror"
                         required>
                 </div>

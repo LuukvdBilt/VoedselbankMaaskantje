@@ -73,18 +73,44 @@ class SupplierModel extends Model
         }
     }
 
-    public function getSupplierById($id)
+  public function getSupplierById($id)
     {
         try {
             $result = DB::select('CALL sp_GetSupplierById(?)', [$id]);
             return $result[0] ?? null;
         } catch (\Exception $e) {
-            Log::error('Error fetching supplier by ID', [
+            Log::error('Error fetching supplier by ID', ['error' => $e->getMessage(), 'id' => $id]);
+            throw $e;
+        }
+    }
+
+    public function updateSupplier($id, array $data): bool
+    {
+        try {
+            // Stored procedure uitvoeren
+            DB::statement('CALL sp_updateSupplier(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                $id,
+                $data['CompanyName'],
+                $data['FirstName'],
+                $data['LastName'],
+                $data['Street'],
+                $data['HouseNumber'],
+                $data['PostalCode'],
+                $data['City'],
+                $data['Phone'],
+                $data['Email'],
+            ]);
+
+            Log::info('Supplier updated successfully', ['id' => $id, 'company_name' => $data['CompanyName']]);
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Error updating supplier', [
                 'error' => $e->getMessage(),
                 'id' => $id,
-                'trace' => $e->getTraceAsString(),
+                'data' => $data,
             ]);
-            throw $e;
+            return false;
         }
     }
 

@@ -79,7 +79,7 @@ class SupplierController extends Controller
                 'FirstName' => 'required|string|max:255',
                 'LastName' => 'required|string|max:255',
                 'Email' => 'required|email|max:255',
-                //validate Dutch phone numbers (starting with +31 or 0, followed by 9 digits)
+                // validate Dutch phone numbers (starting with +31 or 0, followed by 9 digits)
                 'Phone' => [
                     'required',
                     'regex:/^(\+31|0)(6|1|2|3|4|5|7|8|9)[0-9]{8}$/',
@@ -136,22 +136,62 @@ class SupplierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(SupplierModel $supplier, $id)
+    public function edit($id)
     {
         $supplier = $this->supplier->getSupplierById($id);
-        
 
-        return view('supplier.edit', [
-            'supplier' => $supplier,
-        ]);
+        if (! $supplier) {
+            return redirect()->route('supplier.index')->with('error', 'Leverancier niet gevonden.');
+        }
+
+        return view('supplier.edit', ['supplier' => $supplier]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, SupplierModel $supplier)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $validated = $request->validate([
+                'CompanyName' => 'required|string|max:255',
+                'FirstName' => 'required|string|max:255',
+                'LastName' => 'required|string|max:255',
+                'Email' => 'required|email|max:255',
+                'Phone' => [
+                    'required',
+                    'regex:/^(\+31|0)(6|1|2|3|4|5|7|8|9)[0-9]{8}$/',
+                ],
+                'Street' => 'required|string|max:255',
+                'HouseNumber' => 'required|integer|min:1|max:9999',
+                'PostalCode' => [
+                    'required',
+                    'regex:/^[1-9][0-9]{3}\s?[A-Za-z]{2}$/',
+                ],
+                'City' => 'required|string|max:255',
+            ], [
+                'PostalCode.regex' => 'Gebruik een geldige Nederlandse postcode (1234AB).',
+                'Phone.regex' => 'Gebruik een geldig Nederlands telefoonnummer.',
+            ]);
+
+            // Normaliseer postcode en telefoon
+            $validated['PostalCode'] = strtoupper(str_replace(' ', '', $validated['PostalCode']));
+            $validated['Phone'] = str_replace([' ', '-', '.'], '', $validated['Phone']);
+
+            $updated = $this->supplier->updateSupplier($id, $validated);
+
+            if (! $updated) {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Geen wijzigingen doorgevoerd of fout opgetreden.');
+            }
+
+            return redirect()->route('supplier.index')
+                ->with('success', 'Leverancier succesvol bijgewerkt.');
+
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('Error updating supplier', ['error' => $e->getMessage(), 'id' => $id]);
+
+            return redirect()->back()->withInput()->with('error', 'Er is een fout opgetreden.');
+        }
     }
 
     /**
