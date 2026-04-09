@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProductModel extends Model
 {
+    use HasFactory;
     protected $table = 'Product';
     protected $primaryKey = 'Id';
 
@@ -24,7 +26,7 @@ class ProductModel extends Model
     public function category()
     {
         return $this->belongsTo(
-            CategoryModel::class,
+            Category::class,
             'CategoryId',
             'Id'
         );

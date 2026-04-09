@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
-class Inventory
-{
-    protected $table = 'inventory';
-    protected $primaryKey = 'id';
-    protected $fillable = [
-        'product_id',
-        'quantity',
-        'location',
-        'last_updated'
-    ];
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-    public function __construct()
-    {
-        // Constructor
-    }
+class Inventory extends Model
+{
+    use HasFactory;
+
+    protected $table = 'Inventory';
+    protected $primaryKey = 'Id';
+
+    protected $fillable = [
+        'ProductId',
+        'SupplierId',
+        'Quantity',
+        'ExpirationDate',
+        'is_active',
+        'note',
+    ];
 }
