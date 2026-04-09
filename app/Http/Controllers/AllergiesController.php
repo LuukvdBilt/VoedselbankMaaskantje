@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AllergiesModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AllergiesController extends Controller
 {
@@ -19,22 +20,21 @@ class AllergiesController extends Controller
      * Toon overzicht van alle allergieën.
      */
     public function index()
-    {
-        try {
-            $allergies = $this->AllergiesModel->orderBy('Name')->get();
+{
+    try {
+        // Stored procedure met JOINs
+        $allergies = DB::select('CALL sp_getAllAllergies()');
 
-            Log::info('Allergieën succesvol geladen.');
-
-            return view('allergies.index', compact('allergies'));
-
-        } catch (\Exception $e) {
-            Log::error('Fout bij laden allergieën: ' . $e->getMessage());
-
-            return back()->with('error', 'Er ging iets mis bij het laden van de allergieën.');
-        }
+        Log::info('Allergieën succesvol geladen via stored procedure.');
 
         return view('allergies.index', compact('allergies'));
+
+    } catch (\Exception $e) {
+        Log::error('Fout bij laden allergieën: ' . $e->getMessage());
+
+        return back()->with('error', 'Er ging iets mis bij het laden van de allergieën.');
     }
+}
 
     /**
      * Formulier voor nieuwe allergie.
