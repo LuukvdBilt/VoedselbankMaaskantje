@@ -4,77 +4,115 @@ namespace App\Http\Controllers;
 
 use App\Models\ContactModel;
 use App\Models\SupplierModel;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class SupplierController extends Controller
 {
     private $SupplierModel;
 
-    public function __construct()
-    {
-        $this->SupplierModel = new SupplierModel;
-    }
+    public function __construct(private SupplierModel $supplier) {}
 
+    /**
+     * Display a paginated list of all suppliers.
+     */
     public function index(Request $request)
     {
-        $perPage = 6;
-        $page = $request->get('page', 1);
+        try {
+            $perPage = 6;
+            $page = $request->get('page', 1);
 
-        $allSuppliers = collect($this->SupplierModel->getAllSuppliers());
-        $offset = ($page - 1) * $perPage;
-        $suppliers = $allSuppliers->slice($offset, $perPage)->values();
+            // Fetch all suppliers from the database
+            $allSuppliers = collect($this->supplier->getAllSuppliers());
+            $offset = ($page - 1) * $perPage;
+            $suppliers = $allSuppliers->slice($offset, $perPage)->values();
 
-        $suppliersPaginated = new LengthAwarePaginator(
-            $suppliers,
-            $allSuppliers->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+            // Create paginated collection
+            $suppliersPaginated = new LengthAwarePaginator(
+                $suppliers,
+                $allSuppliers->count(),
+                $perPage,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
 
-        return view('supplier.index', ['suppliers' => $suppliersPaginated]);
+            Log::info('Suppliers retrieved successfully', ['page' => $page, 'total' => $allSuppliers->count()]);
+
+            return view('supplier.index', ['suppliers' => $suppliersPaginated]);
+        } catch (\Exception $e) {
+            Log::error('Error retrieving suppliers', ['error' => $e->getMessage()]);
+
+            return redirect()->route('supplier.index')->with('error', 'Er is een fout opgetreden bij het ophalen van leveranciers.');
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new supplier.
      */
     public function create()
     {
-        $suppliers = $this->SupplierModel->getAllSuppliers();
+        try {
+            $suppliers = $this->supplier->getAllSuppliers();
 
-        return view('supplier.create', [
-            'suppliers' => $suppliers,
-        ]);
+            Log::info('Create supplier form loaded');
+
+            return view('supplier.create', [
+                'suppliers' => $suppliers,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error loading create supplier form', ['error' => $e->getMessage()]);
+
+            return redirect()->route('supplier.index')->with('error', 'Er is een fout opgetreden bij het laden van het formulier.');
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created supplier in the database.
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'CompanyName' => 'required|string|max:255',
-            'FirstName' => 'required|string|max:255',
-            'LastName' => 'required|string|max:255',
-            'Email' => 'required|email|max:255',
-            'Phone' => 'required|string|max:255',
-            'Street' => 'required|string|max:255',
-            'HouseNumber' => 'required|integer',
-            'PostalCode' => 'required|string',
-            'City' => 'required|string|max:255',
-        ]);
+        try {
+            // Validate incoming request data
+            $validated = $request->validate([
+                'CompanyName' => 'required|string|max:255',
+                'FirstName' => 'required|string|max:255',
+                'LastName' => 'required|string|max:255',
+                'Email' => 'required|email|max:255',
+                'Phone' => 'required|string|max:255',
+                'Street' => 'required|string|max:255',
+                'HouseNumber' => 'required|integer',
+                'PostalCode' => 'required|string',
+                'City' => 'required|string|max:255',
+            ]);
 
-        $FirstNameExists = ContactModel::where('FirstName', $validated['FirstName'])->exists();
+            // Check if contact with same first name already exists
+            $contactExists = ContactModel::where('FirstName', $validated['FirstName'])
+                ->where('LastName', $validated['LastName'])
+                ->exists();
 
-        if ($FirstNameExists) {
-            return redirect()->back()->with('error', 'Deze leverancier is al bekend bij ons. Controleer de gegevens en probeer het opnieuw.');
+            if ($contactExists) {
+                Log::warning('Duplicate supplier attempt', ['firstName' => $validated['FirstName'], 'lastName' => $validated['LastName']]);
+
+                return redirect()->back()->with('error', 'Deze leverancier is al bekend bij ons. Controleer de gegevens en probeer het opnieuw.');
+            }
+
+            // Create new supplier
+            $this->supplier->createSupplier($validated);
+
+            Log::info('Supplier created successfully', ['companyName' => $validated['CompanyName']]);
+
+            return redirect()->route('supplier.index')->with('success', 'Leverancier succesvol aangemaakt.');
+        } catch (ValidationException $e) {
+            Log::warning('Validation failed for supplier creation', ['errors' => $e->errors()]);
+
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('Error creating supplier', ['error' => $e->getMessage()]);
+
+            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van de leverancier.');
         }
-
-        $this->SupplierModel->createSupplier($validated);
-
-        return redirect()->route('supplier.index')->with('success', 'Leverancier succesvol aangemaakt.');
     }
 
     /**

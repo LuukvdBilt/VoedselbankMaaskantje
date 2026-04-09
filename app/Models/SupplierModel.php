@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Log;
 
 class SupplierModel extends Model
 {
@@ -26,24 +26,51 @@ class SupplierModel extends Model
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * Retrieve all suppliers from the database via stored procedure.
+     */
     public function getAllSuppliers(): array
     {
-        return DB::select('CALL sp_GetAllSuppliers()');
+        try {
+            return DB::select('CALL sp_GetAllSuppliers()');
+        } catch (\Exception $e) {
+            Log::error('Error fetching all suppliers', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
     }
 
+    /**
+     * Create a new supplier with associated contact information via stored procedure.
+     */
     public function createSupplier(array $data): void
     {
-        DB::insert('CALL sp_createSupplier(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-            $data['CompanyName'],
-            $data['FirstName'],
-            $data['LastName'],
-            $data['Email'],
-            $data['Phone'],
-            $data['Street'],
-            $data['HouseNumber'],
-            $data['PostalCode'],
-            $data['City']
-         ]);
+        try {
+            DB::insert('CALL sp_createSupplier(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                $data['CompanyName'],
+                $data['FirstName'],
+                $data['LastName'],
+                $data['Email'],
+                $data['Phone'],
+                $data['Street'],
+                $data['HouseNumber'],
+                $data['PostalCode'],
+                $data['City'],
+            ]);
+
+            Log::info('Supplier created successfully', [
+                'company_name' => $data['CompanyName'],
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error creating supplier', [
+                'error' => $e->getMessage(),
+                'data' => $data,
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
     }
 
     public function contact()
