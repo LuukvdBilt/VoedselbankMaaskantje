@@ -10,12 +10,13 @@ BEGIN
         s.Id,
         CONCAT(a.Street, ' ', a.HouseNumber, ', ', a.PostalCode, ' ', a.City) AS Address,
         c.Phone,
-        c.FirstName,
-        c.LastName,
+        u.Email,
+        CONCAT(c.FirstName, ' ', c.LastName) AS FullName,
         s.CompanyName
     FROM Supplier s
     LEFT JOIN Contact c ON s.ContactId = c.Id
-    LEFT JOIN Address a ON c.AddressId = a.Id;
+    LEFT JOIN Address a ON c.AddressId = a.Id
+    LEFT JOIN users u ON c.UserId = u.Id;
 END$$
 
 DELIMITER ;

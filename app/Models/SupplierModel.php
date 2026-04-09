@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ContactModel;
+use Illuminate\Support\Facades\DB;
+
 
 class SupplierModel extends Model
 {
     use HasFactory;
+
     protected $table = 'Supplier';
 
     protected $fillable = [
@@ -23,6 +25,11 @@ class SupplierModel extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function getAllSuppliers(): array
+    {
+        return DB::select('CALL sp_GetAllSuppliers()');
+    }
 
     public function contact()
     {

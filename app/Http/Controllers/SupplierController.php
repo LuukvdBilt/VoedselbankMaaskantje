@@ -52,7 +52,8 @@ class SupplierController extends Controller
      */
     public function edit(SupplierModel $supplier)
     {
-        //
+        return view('supplier.edit', [
+        ]);
     }
 
     /**
@@ -68,6 +69,6 @@ class SupplierController extends Controller
      */
     public function destroy(SupplierModel $supplier)
     {
-        //
+       //
     }
 }
