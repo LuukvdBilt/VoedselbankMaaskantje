@@ -10,8 +10,19 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /*
+        |--------------------------------------------------------------------------
+        | DROP bestaande procedures
+        |--------------------------------------------------------------------------
+        */
         DB::statement("DROP PROCEDURE IF EXISTS sp_getAllSuppliers;");
+        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllAllergies;");
 
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE sp_getAllSuppliers
+        |--------------------------------------------------------------------------
+        */
         DB::statement("
             CREATE PROCEDURE sp_getAllSuppliers()
             BEGIN
@@ -27,6 +38,30 @@ return new class extends Migration
                 LEFT JOIN Address a ON c.AddressId = a.Id;
             END;
         ");
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE sp_getAllAllergies (met JOINs zoals verplicht)
+        |--------------------------------------------------------------------------
+        */
+        DB::statement("
+            CREATE PROCEDURE sp_getAllAllergies()
+            BEGIN
+                SELECT 
+                    a.Id,
+                    a.Name,
+                    a.Description,
+                    COUNT(DISTINCT fpa.FoodPackageId) AS TotalFoodPackages,
+                    COUNT(DISTINCT fpp.ProductId) AS TotalProducts
+                FROM Allergies a
+                LEFT JOIN FoodPackage_Allergies fpa
+                    ON fpa.AllergiesId = a.Id
+                LEFT JOIN FoodPackage_Products fpp
+                    ON fpp.FoodPackageId = fpa.FoodPackageId
+                GROUP BY a.Id, a.Name, a.Description
+                ORDER BY a.Name;
+            END;
+        ");
     }
 
     /**
@@ -34,6 +69,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('DROP PROCEDURE IF EXISTS GetAllSuppliers');
+        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllSuppliers;");
+        DB::statement("DROP PROCEDURE IF EXISTS sp_getAllAllergies;");
     }
 };
