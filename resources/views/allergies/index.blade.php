@@ -1,9 +1,12 @@
 <x-layouts::app :title="__('Overzicht van allergieën')">
+    {{-- Pagina-wrapper voor overzicht, tabel en acties. --}}
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
 
+        {{-- Tabelcontainer met horizontale scroll voor kleinere schermen. --}}
         <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
+                    {{-- Tabelkop met vaste kolommen voor alle allergy-attributen en acties. --}}
                     <thead
                         class="border-b border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900">
                         <tr>
@@ -23,6 +26,7 @@
                     </thead>
 
                     <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
+                        {{-- Toon alle allergieën; bij lege dataset tonen we een fallback-bericht. --}}
                         @forelse($allergies as $allergy)
                             <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-900/50">
                                 <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">
@@ -47,6 +51,7 @@
                                 </td>
 
                                 <td class="px-6 py-4">
+                                    {{-- Open modal met extra bevestiging om onbedoeld verwijderen te voorkomen. --}}
                                     <button 
                                         onclick="openDeleteModal({{ $allergy->Id }}, '{{ $allergy->Name }}')"
                                         class="text-red-500 hover:text-red-700">
@@ -78,14 +83,14 @@
 
     </div>
 
-  <!-- DELETE MODAL -->
+    <!-- Modal voor verwijderbevestiging met handmatige code-invoer -->
 <div id="deleteModal" 
      class="fixed inset-0 hidden items-center justify-center z-50">
 
-    <!-- Achtergrond (transparant, geen zwart) -->
+        <!-- Zachte achtergrondblur om focus op de modal te houden -->
     <div class="absolute inset-0 backdrop-blur-sm"></div>
 
-    <!-- Modal box -->
+        <!-- Inhoud van de bevestigingsmodal -->
     <div class="relative bg-white dark:bg-neutral-800 p-6 rounded-xl w-full max-w-md shadow-2xl animate-fadeIn">
 
         <h2 class="text-xl font-semibold mb-4">Allergie verwijderen</h2>
@@ -95,12 +100,12 @@
             <span id="deleteItemName" class="font-semibold"></span> definitief te verwijderen.
         </p>
 
-        <!-- UNHAPPY MELDING -->
+        <!-- Foutmelding bij onjuiste bevestigingscode -->
         <div id="deleteError" class="hidden mb-4 rounded-lg bg-red-600 text-white px-4 py-2">
             De ingevoerde code is onjuist.
         </div>
 
-        <!-- HAPPY MELDING -->
+        <!-- Succesmelding voordat formulier automatisch wordt verzonden -->
         <div id="deleteSuccess" class="hidden mb-4 rounded-lg bg-green-600 text-white px-4 py-2">
             Verwijderen bevestigd! De allergie wordt verwijderd...
         </div>
@@ -143,6 +148,7 @@
 </style>
 
 <script>
+    // Open de modal, vul itemnaam in en reset vorige statusmeldingen.
     function openDeleteModal(id, name) {
         const modal = document.getElementById('deleteModal');
         modal.classList.remove('hidden');
@@ -157,12 +163,14 @@
         document.getElementById('deleteSuccess').classList.add('hidden');
     }
 
+    // Sluit de modal zonder actie.
     function closeDeleteModal() {
         const modal = document.getElementById('deleteModal');
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
 
+    // Controleer handmatige bevestigingscode en verstuur daarna pas het formulier.
     function validateDeleteCode() {
         const input = document.getElementById('deleteConfirmInput').value;
         const errorBox = document.getElementById('deleteError');

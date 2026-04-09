@@ -1,15 +1,17 @@
 <x-layouts::app :title="__('Allergie bewerken')">
 
+    {{-- Hoofdcontainer voor het bewerkformulier met compacte breedte. --}}
     <div class="max-w-xl mx-auto mt-6 rounded-xl border border-neutral-200 dark:border-neutral-700 p-6">
 
         <h1 class="text-2xl font-semibold mb-6">Allergie bewerken</h1>
 
-        {{-- SUCCES MELDING --}}
+        {{-- Toon success feedback na een geslaagde update. --}}
         @if(session('success'))
             <div class="mb-4 rounded-lg bg-green-600 text-white px-4 py-2 animate-fade">
                 {{ session('success') }}
             </div>
 
+            {{-- Navigeer automatisch terug naar het overzicht na korte bevestiging. --}}
             <script>
                 setTimeout(function () {
                     window.location.href = "{{ route('allergies.index') }}";
@@ -17,14 +19,14 @@
             </script>
         @endif
 
-        {{-- UNHAPPY MELDING (UIT VALIDATIE / ERRORS) --}}
+        {{-- Toon algemene foutmelding vanuit de controller (bijvoorbeeld in catch-blok). --}}
         @if ($errors->has('error'))
             <div class="mb-4 rounded-lg bg-red-600 text-white px-4 py-2">
                 {{ $errors->first('error') }}
             </div>
         @endif
 
-        {{-- VALIDATIE ERRORS (zoals Name.unique) --}}
+        {{-- Toon veldspecifieke validatiefouten wanneer er geen algemene foutmelding is. --}}
         @if ($errors->any() && !$errors->has('error'))
             <div class="mb-4 rounded-lg bg-red-600 text-white px-4 py-2">
                 <ul class="list-disc ml-4">
@@ -35,10 +37,12 @@
             </div>
         @endif
 
+        {{-- Formulier voor het bijwerken van een bestaande allergie. --}}
         <form action="{{ route('allergies.update', $allergy->Id) }}" method="POST" class="flex flex-col gap-4">
             @csrf
             @method('PUT')
 
+            {{-- Naamveld met old()-fallback zodat invoer na validatiefout behouden blijft. --}}
             <div>
                 <label class="block mb-1">Naam</label>
                 <input type="text" name="Name"
@@ -47,6 +51,7 @@
                        required>
             </div>
 
+            {{-- Beschrijvingsveld met bestaande waarde als standaard. --}}
             <div>
                 <label class="block mb-1">Beschrijving</label>
                 <input type="text" name="Description"
@@ -55,6 +60,7 @@
                        required>
             </div>
 
+            {{-- Handmatig aantal gekoppelde pakketten; alleen niet-negatieve waarden toegestaan. --}}
             <div>
                 <label class="block mb-1">Aantal pakketten (handmatig)</label>
                 <input type="number" name="TotalFoodPackages"
@@ -64,6 +70,7 @@
                        required>
             </div>
 
+            {{-- Handmatig aantal gekoppelde producten; ook hier geen negatieve waarden. --}}
             <div>
                 <label class="block mb-1">Aantal producten (handmatig)</label>
                 <input type="number" name="TotalProducts"
@@ -73,6 +80,7 @@
                        required>
             </div>
 
+            {{-- Actieknoppen: annuleren of wijzigingen opslaan. --}}
             <div class="flex justify-between mt-4">
                 <a href="{{ route('allergies.index') }}"
                    class="rounded-lg bg-neutral-300 px-4 py-2">
