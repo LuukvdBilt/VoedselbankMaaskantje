@@ -47,5 +47,10 @@ class DatabaseSeeder extends Seeder
             'rolename' => 'supplier',
         ]);
 
+        $this->call([
+            ContactSeeder::class,
+            SupplierSeeder::class,
+            AddressSeeder::class,
+        ]);
     }
 }

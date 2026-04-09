@@ -4,16 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ContactModel;
 
-class SupplierModel extends Model
+class AddressModel extends Model
 {
     use HasFactory;
-    protected $table = 'Supplier';
+
+    protected $table = 'Address';
 
     protected $fillable = [
-        'CompanyName',
-        'ContactId',
+        'Street',
+        'City',
+        'State',
+        'PostalCode',
+        'Country',
         'is_active',
         'note',
     ];
@@ -23,9 +26,4 @@ class SupplierModel extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    public function contact()
-    {
-        return $this->belongsTo(ContactModel::class, 'ContactId');
-    }
 }
