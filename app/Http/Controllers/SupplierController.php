@@ -175,6 +175,14 @@ class SupplierController extends Controller
             $validated['PostalCode'] = strtoupper(str_replace(' ', '', $validated['PostalCode']));
             $validated['Phone'] = str_replace([' ', '-', '.'], '', $validated['Phone']);
 
+            $supplier = $this->supplier->getSupplierById($id);
+
+            $IsActive = SupplierModel::where('id', $id)->value('is_active') ?? 0;
+
+            if ($IsActive === false) {
+                return redirect()->route('supplier.index')->with('error', 'Leverancier is inactief en kan niet worden bijgewerkt. verwijder de leverancier');
+            }
+
             $updated = $this->supplier->updateSupplier($id, $validated);
 
             if (! $updated) {

@@ -35,6 +35,7 @@ BEGIN
         c.Phone = p_phone,
         u.Email = p_email
     WHERE s.Id = p_supplierId;
+    SELECT is_active FROM Supplier WHERE Id = p_supplierId; -- Controleer of de leverancier nog steeds actief is
 
     -- Haal het aantal daadwerkelijk gewijzigde rijen op
     SET affected_rows = ROW_COUNT();
