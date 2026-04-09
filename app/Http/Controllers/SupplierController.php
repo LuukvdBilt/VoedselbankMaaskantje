@@ -40,7 +40,10 @@ class SupplierController extends Controller
      */
     public function create()
     {
+        $suppliers = $this->SupplierModel->getAllSuppliers();
+
         return view('supplier.create', [
+            'suppliers' => $suppliers
         ]);
     }
 
@@ -49,7 +52,15 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'CompanyName' => 'required|string|max:255',
+            'FullName' => 'required|string|max:255',
+            'Address' => 'nullable|string|max:255',
+            'Email' => 'required|email|max:255',
+            'Phone' => 'nullable|string|max:255',
+        ]);
+
+        $this->SupplierModel->createSupplier($validated);
     }
 
     /**
