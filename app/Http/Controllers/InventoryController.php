@@ -13,9 +13,14 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        $inventory = DB::select('CALL GetInventory()');
-
-        return view('Inventory.inventory', compact('inventory'));
+        $lock = false;
+        if ($lock === false) {
+            $inventory = DB::select('CALL GetInventory()');
+            return view('Inventory.inventory', compact('inventory'));
+        } else {
+            $inventory = "";
+            return view('Inventory.inventory', compact('inventory'));
+        }
     }
 
     /**
@@ -63,6 +68,7 @@ class InventoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::delete('DELETE FROM Inventory WHERE id = ?', [$id]);
+        return redirect()->route('inventory.index')->with('success', 'Inventory item deleted successfully.');
     }
 }

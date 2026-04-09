@@ -83,8 +83,8 @@ return new class extends Migration
                     i.note AS InventoryNote,
                     p.note AS ProductNote
                 FROM Inventory i
-                INNER JOIN Product p ON i.ProductId = p.Id
-                INNER JOIN Category c ON p.CategoryId = c.Id
+                LEFT JOIN Product p ON i.ProductId = p.Id
+                LEFT JOIN Category c ON p.CategoryId = c.Id
                 LEFT JOIN Supplier s ON i.SupplierId = s.Id
                 WHERE i.is_active = 1
                 ORDER BY p.ProductName;
