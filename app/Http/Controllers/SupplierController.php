@@ -43,7 +43,7 @@ class SupplierController extends Controller
         $suppliers = $this->SupplierModel->getAllSuppliers();
 
         return view('supplier.create', [
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
         ]);
     }
 
@@ -54,13 +54,23 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'CompanyName' => 'required|string|max:255',
-            'FullName' => 'required|string|max:255',
-            'Address' => 'nullable|string|max:255',
+            'FirstName' => 'required|string|max:255',
+            'LastName' => 'required|string|max:255',
             'Email' => 'required|email|max:255',
-            'Phone' => 'nullable|string|max:255',
+            'Phone' => 'required|string|max:255',
+            'Street' => 'required|string|max:255',
+            'HouseNumber' => 'required|string|max:255',
+            'PostalCode' => 'required|string|max:255',
+            'City' => 'required|string|max:255',
         ]);
 
         $this->SupplierModel->createSupplier($validated);
+
+        if ($validated) {
+            return redirect()->route('supplier.index')->with('success', 'Supplier created successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Failed to create supplier. Please try again.');
+        }
     }
 
     /**
