@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS FoodBankDB;
-CREATE DATABASE FoodBankDB;
+git 
 USE FoodBankDB;
 
 -- Address (gedeeld door Contact en Client)
