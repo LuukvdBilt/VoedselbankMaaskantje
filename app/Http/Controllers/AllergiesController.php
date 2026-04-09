@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\AllergiesModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 class AllergiesController extends Controller
 {
@@ -20,21 +19,11 @@ class AllergiesController extends Controller
      * Toon overzicht van alle allergieën.
      */
     public function index()
-{
-    try {
-        // Stored procedure met JOINs
-        $allergies = DB::select('CALL sp_getAllAllergies()');
-
-        Log::info('Allergieën succesvol geladen via stored procedure.');
+    {
+        $allergies = $this->AllergiesModel->getAllAllergies();
 
         return view('allergies.index', compact('allergies'));
-
-    } catch (\Exception $e) {
-        Log::error('Fout bij laden allergieën: ' . $e->getMessage());
-
-        return back()->with('error', 'Er ging iets mis bij het laden van de allergieën.');
     }
-}
 
     /**
      * Formulier voor nieuwe allergie.
@@ -49,13 +38,13 @@ class AllergiesController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'Name' => 'required|string|max:255|unique:Allergies,Name',
             'Description' => 'required|string|max:255',
         ]);
 
         try {
-            AllergiesModel::create($request->all());
+            AllergiesModel::create($validated);
 
             Log::info('Nieuwe allergie toegevoegd: ' . $request->Name);
 
@@ -87,14 +76,14 @@ class AllergiesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'Name' => 'required|string|max:255|unique:Allergies,Name,' . $id . ',Id',
             'Description' => 'required|string|max:255',
         ]);
 
         try {
             $allergy = AllergiesModel::findOrFail($id);
-            $allergy->update($request->all());
+            $allergy->update($validated);
 
             Log::info('Allergie bijgewerkt: ' . $allergy->Name);
 

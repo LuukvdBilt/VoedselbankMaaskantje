@@ -1,3 +1,5 @@
 <x-layouts::app :title="__('Inventory')">
-    hoi
+    <?php
+    dd($inventory);
+    ?>
 </x-layouts::app>

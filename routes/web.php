@@ -18,6 +18,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('inventory', InventoryController::class)
         ->middleware('role:admin,manager');
+
+        Route::resource('allergies', AllergiesController::class)
+        ->middleware('role:admin,manager');
 });
 
 //supplier routes
@@ -25,5 +28,8 @@ Route::get('/supplier', [SupplierController::class, 'index'])->name('supplier.in
 Route::get('/supplier/{id}/edit', [SupplierController::class, 'edit'])->name('supplier.edit');
 Route::put('/supplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');
 Route::delete('/supplier/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
+Route::get('/supplier', [SupplierController::class, 'index']
+)->name('supplier.index');
+
 
 require __DIR__.'/settings.php';

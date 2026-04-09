@@ -52,6 +52,7 @@ class DatabaseSeeder extends Seeder
             SupplierSeeder::class,
             AddressSeeder::class,
             AllergiesSeeder::class,
+            CategorySeeder::class,
         ]);
     }
 }
