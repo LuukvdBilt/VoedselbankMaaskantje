@@ -9,9 +9,9 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories';
-    protected $primaryKey = 'id';
+    protected $table = 'Category'; // let op: lowercase naam zoals in je DB
+    protected $primaryKey = 'Id';  // hoofdletter Id zoals in je DB
 
-    // Mass assignment
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['Name', 'note', 'is_active']; // kolomnamen exact zoals in DB
+    public $timestamps = true; // je hebt created_at en updated_at
 }
