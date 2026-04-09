@@ -7,11 +7,11 @@ CREATE PROCEDURE sp_createSupplier(
     IN p_FirstName VARCHAR(100),
     IN p_LastName VARCHAR(100),
     IN p_Email VARCHAR(255),
+    IN p_Phone VARCHAR(20),
     IN p_Street VARCHAR(255),
-    IN p_HouseNumber VARCHAR(10),
+    IN p_HouseNumber BIGINT,
     IN p_PostalCode VARCHAR(10),
-    IN p_City VARCHAR(100),
-    IN p_Phone VARCHAR(20)
+    IN p_City VARCHAR(100)
 )
 
 BEGIN
@@ -69,9 +69,9 @@ CALL sp_createSupplier(
     'John',
     'Doe',
     'john.doe@example.com',
+    '555-1234',
     'Main Street',
-    '123',
+    123,
     '12345',
-    'Anytown',
-    '555-1234'
+    'Anytown'
 );

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContactModel;
 use App\Models\SupplierModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -59,22 +61,20 @@ class SupplierController extends Controller
             'Email' => 'required|email|max:255',
             'Phone' => 'required|string|max:255',
             'Street' => 'required|string|max:255',
-            'HouseNumber' => 'required|string|max:255',
-            'PostalCode' => 'required|string|max:255',
+            'HouseNumber' => 'required|integer',
+            'PostalCode' => 'required|string',
             'City' => 'required|string|max:255',
         ]);
 
+        $FirstNameExists = ContactModel::where('FirstName', $validated['FirstName'])->exists();
+
+        if ($FirstNameExists) {
+            return redirect()->back()->with('error', 'Deze leverancier is al bekend bij ons. Controleer de gegevens en probeer het opnieuw.');
+        }
+
         $this->SupplierModel->createSupplier($validated);
 
-        if ($validated) {
-            return redirect()->route('supplier.index')->with('success', 'Leverancier succesvol aangemaakt.');
-        }
-        // elseif () [
-
-        // ] 
-        else {
-            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van de leverancier. Probeer het opnieuw.');
-        }
+        return redirect()->route('supplier.index')->with('success', 'Leverancier succesvol aangemaakt.');
     }
 
     /**

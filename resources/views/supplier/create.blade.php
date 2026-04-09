@@ -4,6 +4,24 @@
             class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <h1 class="px-6 py-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">Nieuwe Leverancier</h1>
 
+            @if (session('success'))
+                <div class="mb-4 rounded-md bg-green-50 p-4">
+                    <div class="flex">
+                        <div class="ml-3">
+                            <p class="text-lg font-medium text-green-800">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @elseif (session('error'))
+                <div class="mb-4 rounded-md bg-red-50 p-4">
+                    <div class="flex">
+                        <div class="ml-3">
+                            <p class="text-lg font-medium text-red-800">{{ session('error') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <form action="{{ route('supplier.store') }}" method="POST" class="space-y-6 px-6 py-4">
                 @csrf
 
@@ -82,7 +100,7 @@
                     <label for="HouseNumber" class="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                         Huisnummer
                     </label>
-                    <input type="text" name="HouseNumber" id="HouseNumber" value="{{ old('HouseNumber') }}"
+                    <input type="number" name="HouseNumber" id="HouseNumber" value="{{ old('HouseNumber') }}"
                         class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-3 py-2 text-neutral-900 dark:text-neutral-100 @error('HouseNumber') border-red-500 @enderror"
                         required>
                     @error('HouseNumber')

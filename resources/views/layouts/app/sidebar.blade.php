@@ -20,7 +20,7 @@
                     {{ __('Dashboard') }}
                 </flux:sidebar.item>
 
-                @if (auth()->user()->rolename === 'admin' || auth()->user()->rolename === 'manager')
+                @if (auth()->user()->rolename === 'admin' ?? null || auth()->user()->rolename === 'manager' ?? null)
                     <flux:sidebar.item icon="archive-box" :href="route('inventory.index')"
                         :current="request()->routeIs('inventory.*')" wire:navigate>
                         {{ __('Magazijn') }}
@@ -29,7 +29,7 @@
                     <flux:sidebar.item icon="truck" :href="route('supplier.index')"
                         :current="request()->routeIs('supplier.index')" wire:navigate>
                         {{ __('Leverancier Overzicht') }}
-                    </flux:sidebar.item>
+                    </flux:sidebar.item>                
                 @endif
             </flux:sidebar.group>
 
@@ -99,9 +99,9 @@
     {{ $slot }}
 
     @persist('toast')
-        <flux:toast.group>
-            <flux:toast />
-        </flux:toast.group>
+    <flux:toast.group>
+        <flux:toast />
+    </flux:toast.group>
     @endpersist
 
     @fluxScripts

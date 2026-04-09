@@ -33,7 +33,7 @@ class SupplierModel extends Model
 
     public function createSupplier(array $data): void
     {
-        DB::insert('CALL sp_CreateSupplier(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        DB::insert('CALL sp_createSupplier(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $data['CompanyName'],
             $data['FirstName'],
             $data['LastName'],
