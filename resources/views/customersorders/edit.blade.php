@@ -1,13 +1,13 @@
-<!-- resources/views/customersorders/create.blade.php -->
+<!-- resources/views/customersorders/edit.blade.php -->
 
-<x-layouts::app :title="__('Nieuwe Bestelling')">
+<x-layouts::app :title="__('Bestelling Wijzigen')">
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
         <div class="mb-8">
             <h1 class="text-4xl font-bold text-green-900 dark:text-white mb-2">
-                Nieuwe Bestelling
+                Bestelling Wijzigen
             </h1>
             <p class="text-gray-600 dark:text-gray-300">
-                Plaats een nieuwe voedingspakket bestelling
+                Update je bestelling
             </p>
         </div>
 
@@ -16,14 +16,15 @@
                 <div class="px-8 py-6 border-b border-gray-200 dark:border-slate-700 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
                     <h2 class="text-2xl font-bold text-green-900 dark:text-white flex items-center gap-2">
                         <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                         Voedselpakketten
                     </h2>
                 </div>
 
-                <form action="{{ route('customersorders.store', $client->Id) }}" method="POST" class="p-8">
+                <form action="{{ route('customersorders.update', [$client->Id, $distribution->Id]) }}" method="POST" class="p-8">
                     @csrf
+                    @method('PUT')
 
                     @if ($errors->any())
                         <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
@@ -48,44 +49,11 @@
                                         <input type="radio" name="food_package_id" value="{{ $package->Id }}" 
                                             class="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-2 focus:ring-green-500 mt-1"
                                             id="package_{{ $package->Id }}"
-                                            @checked(old('food_package_id') == $package->Id)>
+                                            @checked(old('food_package_id', $distribution->FoodPackageId) == $package->Id)>
 
                                         <div class="flex-1">
                                             <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $package->Name }}</h3>
                                             <p class="text-gray-600 dark:text-gray-400 mt-1">{{ $package->Description ?? 'Geen beschrijving' }}</p>
-
-                                            <!-- Product Toevoegen -->
-                                            @if($package->products && $package->products->count() > 0)
-                                                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
-                                                    <p class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Product Toevoegen:</p>
-                                                    <div class="space-y-2">
-                                                        @foreach($package->products as $product)
-                                                            <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-slate-700 rounded">
-                                                                <p class="text-sm text-gray-700 dark:text-gray-300">
-                                                                    {{ $product->ProductName ?? 'Onbekend' }}
-                                                                </p>
-                                                                <span class="text-xs font-semibold text-green-600 dark:text-green-400">
-                                                                    x{{ $product->pivot->Quantity ?? 1 }}
-                                                                </span>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            @endif
-
-                                            <!-- Allergies / Allergieën -->
-                                            @if($package->allergies && $package->allergies->count() > 0)
-                                                <div class="mt-3 pt-3 border-t border-gray-200 dark:border-slate-700">
-                                                    <p class="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">Allergieën:</p>
-                                                    <div class="flex flex-wrap gap-2">
-                                                        @foreach($package->allergies as $allergy)
-                                                            <span class="inline-block px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs rounded-full">
-                                                                {{ $allergy->Name ?? 'Onbekend' }}
-                                                            </span>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            @endif
                                         </div>
                                     </div>
                                 </label>
@@ -96,6 +64,50 @@
                         @enderror
                     </div>
 
+                    <!-- Product Toevoegen -->
+                    <div class="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                            Product Toevoegen
+                        </label>
+                        @php
+                            $selectedPackage = collect($foodPackages)->firstWhere('Id', old('food_package_id', $distribution->FoodPackageId));
+                        @endphp
+                        @if($selectedPackage && $selectedPackage->products && $selectedPackage->products->count() > 0)
+                            <div class="space-y-2">
+                                @foreach($selectedPackage->products as $product)
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                                        <p class="text-gray-700 dark:text-gray-300">
+                                            {{ $product->ProductName ?? 'Onbekend' }}
+                                        </p>
+                                        <span class="text-sm font-semibold text-green-600 dark:text-green-400">
+                                            x{{ $product->pivot->Quantity ?? 1 }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-gray-500 dark:text-gray-400 italic">Geen producten in dit pakket</p>
+                        @endif
+                    </div>
+
+                    <!-- Allergies / Allergieën -->
+                    <div class="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                            Allergieën
+                        </label>
+                        @if($selectedPackage && $selectedPackage->allergies && $selectedPackage->allergies->count() > 0)
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($selectedPackage->allergies as $allergy)
+                                    <span class="inline-block px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full text-sm font-semibold">
+                                        {{ $allergy->Name ?? 'Onbekend' }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-gray-500 dark:text-gray-400 italic">Geen allergieën voor dit pakket</p>
+                        @endif
+                    </div>
+
                     <!-- Wensen -->
                     <div class="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -103,7 +115,7 @@
                         </label>
                         <textarea name="wishes" placeholder="Bijzondere wensen..."
                             class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                            rows="3">{{ old('wishes') }}</textarea>
+                            rows="3">{{ old('wishes', $distribution->wishes ?? '') }}</textarea>
                     </div>
 
                     <!-- Postcode -->
@@ -139,7 +151,7 @@
                         </label>
                         <textarea name="note" placeholder="Aanvullende opmerkingen..."
                             class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 @error('note') ring-2 ring-red-500 @enderror"
-                            rows="4">{{ old('note') }}</textarea>
+                            rows="4">{{ old('note', $distribution->note ?? '') }}</textarea>
                         @error('note')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -151,7 +163,7 @@
                             <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                             </svg>
-                            Bestelling Plaatsen
+                            Wijzigingen Opslaan
                         </button>
                         <a href="{{ route('customersorders.index', $client->Id) }}" class="flex-1 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-900 dark:text-white font-bold py-3 px-6 rounded-lg transition-all text-center">
                             Annuleren

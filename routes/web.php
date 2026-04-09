@@ -30,7 +30,6 @@ Route::middleware('auth')->prefix('customers')->group(function () {
     // Customer Registration
     Route::get('/registration', [CustomerRegistrationController::class, 'index'])->name('customersregistration.index');
     Route::post('/registration', [CustomerRegistrationController::class, 'store'])->name('customersregistration.store');
-    Route::get('/{id}/registration', [CustomerRegistrationController::class, 'show'])->name('customersregistration.show');
     Route::get('/{id}/registration/edit', [CustomerRegistrationController::class, 'edit'])->name('customersregistration.edit');
     Route::put('/{id}/registration', [CustomerRegistrationController::class, 'update'])->name('customersregistration.update');
 

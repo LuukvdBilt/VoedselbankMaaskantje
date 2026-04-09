@@ -7,25 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 class FoodPackageDistribution extends Model
 {
     protected $table = 'FoodPackageDistribution';
+
     protected $primaryKey = 'Id';
+
     public $timestamps = true;
+
     const CREATED_AT = 'created_at';
+
     const UPDATED_AT = 'updated_at';
 
     protected $fillable = [
         'HouseholdId',
         'FoodPackageId',
+        'VolunteerId',
         'DistributionDate',
-        'Quantity',
         'is_active',
-        'note'
+        'note',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'DistributionDate' => 'datetime',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
     ];
 
     public function household()
@@ -35,6 +39,6 @@ class FoodPackageDistribution extends Model
 
     public function foodPackage()
     {
-        return $this->belongsTo(FoodPackage::class, 'FoodPackageId', 'Id');
+        return $this->belongsTo(FoodpackageModel::class, 'FoodPackageId', 'Id');
     }
 }
