@@ -1,37 +1,41 @@
-@extends('layouts.app')
+<x-layouts::app :title="__('Allergie toevoegen')">
 
-@section('content')
-<div class="container mt-4">
+    <div class="max-w-xl mx-auto mt-6 rounded-xl border border-neutral-200 dark:border-neutral-700 p-6">
 
-    <h2>Nieuwe allergie toevoegen</h2>
+        <h1 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-6">
+            Nieuwe allergie toevoegen
+        </h1>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Er zijn fouten gevonden:</strong>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        <form action="{{ route('allergies.store') }}" method="POST" class="flex flex-col gap-4">
+            @csrf
 
-    <form action="{{ route('allergies.store') }}" method="POST">
-        @csrf
+            <div>
+                <label class="block text-neutral-700 dark:text-neutral-300 mb-1">Naam</label>
+                <input type="text" name="Name"
+                       class="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-900 px-3 py-2"
+                       required>
+            </div>
 
-        <div class="mb-3">
-            <label for="Name" class="form-label">Naam</label>
-            <input type="text" name="Name" id="Name" class="form-control" value="{{ old('Name') }}" required>
-        </div>
+            <div>
+                <label class="block text-neutral-700 dark:text-neutral-300 mb-1">Beschrijving</label>
+                <input type="text" name="Description"
+                       class="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-900 px-3 py-2"
+                       required>
+            </div>
 
-        <div class="mb-3">
-            <label for="Description" class="form-label">Beschrijving</label>
-            <input type="text" name="Description" id="Description" class="form-control" value="{{ old('Description') }}" required>
-        </div>
+            <div class="flex justify-between mt-4">
+                <a href="{{ route('allergies.index') }}"
+                   class="rounded-lg bg-neutral-300 dark:bg-neutral-700 px-4 py-2 text-neutral-900 dark:text-neutral-100">
+                    Annuleren
+                </a>
 
-        <button type="submit" class="btn btn-success">Opslaan</button>
-        <a href="{{ route('allergies.index') }}" class="btn btn-secondary">Annuleren</a>
-    </form>
+                <button type="submit"
+                        class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+                    Opslaan
+                </button>
+            </div>
+        </form>
 
-</div>
-@endsection
+    </div>
+
+</x-layouts::app>
