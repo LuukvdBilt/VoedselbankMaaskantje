@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('Address', function (Blueprint $table) {
             $table->id('Id');
-            $table->string('Street');
+            $table->string('Street', 255);
             $table->string('HouseNumber', 10);
-            $table->string('PostalCode', 20);
-            $table->string('City');
+            $table->string('PostalCode', 40);
+            $table->string('City', 100);
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
@@ -22,8 +22,8 @@ return new class extends Migration
         Schema::create('Contact', function (Blueprint $table) {
             $table->id('Id');
             $table->unsignedBigInteger('UserId');
-            $table->string('FirstName');
-            $table->string('LastName');
+            $table->string('FirstName', 100);
+            $table->string('LastName', 100);
             $table->string('Phone', 20)->nullable();
             $table->unsignedBigInteger('AddressId')->nullable();
             $table->timestamps();
@@ -36,8 +36,8 @@ return new class extends Migration
 
         Schema::create('Client', function (Blueprint $table) {
             $table->id('Id');
-            $table->string('FirstName');
-            $table->string('LastName');
+            $table->string('FirstName', 100);
+            $table->string('LastName', 100);
             $table->string('Phone', 20)->nullable();
             $table->unsignedBigInteger('AddressId')->nullable();
             $table->timestamps();
@@ -49,7 +49,7 @@ return new class extends Migration
 
         Schema::create('Category', function (Blueprint $table) {
             $table->id('Id');
-            $table->string('Name')->unique();
+            $table->string('Name', 100)->unique();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
@@ -57,7 +57,7 @@ return new class extends Migration
 
         Schema::create('Supplier', function (Blueprint $table) {
             $table->id('Id');
-            $table->string('CompanyName');
+            $table->string('CompanyName', 255);
             $table->unsignedBigInteger('ContactId');
             $table->timestamps();
             $table->boolean('is_active')->default(true);

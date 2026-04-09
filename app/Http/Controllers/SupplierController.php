@@ -67,9 +67,13 @@ class SupplierController extends Controller
         $this->SupplierModel->createSupplier($validated);
 
         if ($validated) {
-            return redirect()->route('supplier.index')->with('success', 'Supplier created successfully.');
-        } else {
-            return redirect()->back()->with('error', 'Failed to create supplier. Please try again.');
+            return redirect()->route('supplier.index')->with('success', 'Leverancier succesvol aangemaakt.');
+        }
+        // elseif () [
+
+        // ] 
+        else {
+            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van de leverancier. Probeer het opnieuw.');
         }
     }
 

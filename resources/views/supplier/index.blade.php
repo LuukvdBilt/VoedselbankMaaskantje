@@ -6,6 +6,33 @@
             <a href="{{ route('supplier.create') }}" class="ml-6 m-4  inline-block rounded-md bg-green-500 px-4 py-2 text-white hover:bg-green-600">Nieuwe Leverancier</a>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
+                    @if (session('success'))
+                        <div class="mb-4 rounded-md bg-green-50 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 000-1.414-1.414L9 10.586 7.707 9.293a1 1 000-1.414-1.414L8.293 11.293a1 1 000 1.414l2 2z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif (session('error'))
+                        <div class="mb-4 rounded-md bg-red-50 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1.707-9.707a1 1 000-1.414L10.586 9l-2.293-2.293a1 1 000-1.414L9.293 10l2.293 2.293a1 1 000 1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     <thead
                         class="border-b border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900">
                         <tr>
