@@ -55,6 +55,22 @@ class InventoryControllerTest extends TestCase
         $response->assertViewIs('Inventory.inventory');
     }
 
+    public function test_index_shows_success_flash_message()
+    {
+        DB::shouldReceive('select')
+            ->with('CALL GetInventory()')
+            ->once()
+            ->andReturn([]);
+
+        $response = $this->withSession([
+            'success' => 'Inventory item updated successfully.',
+        ])->get(route('inventory.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('alert alert-success', false);
+        $response->assertSee('Inventory item updated successfully.');
+    }
+
     public function test_create_returns_create_view()
     {
         $response = $this->get(route('inventory.create'));

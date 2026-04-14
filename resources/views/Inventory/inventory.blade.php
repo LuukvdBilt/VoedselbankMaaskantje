@@ -1,4 +1,10 @@
 <x-layouts::app :title="__('Magazijn')">
+    @if (session('success'))
+        <div class="alert alert-success w-100 w-full rounded-0 mb-0 px-4 py-3 border border-green-300 bg-green-100 text-green-800" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="container mx-auto px-4 py-8 dark:bg-gray-900">
         <div class="mb-6 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-gray-800 dark:text-green-400">{{ __('Magazijn') }}</h1>
