@@ -20,7 +20,12 @@
                     {{ __('Dashboard') }}
                 </flux:sidebar.item>
 
-                @if (auth()->user()->rolename === 'admin' ?? null || auth()->user()->rolename === 'manager' ?? null)
+                @php
+                    $isEmployee = in_array(auth()->user()->rolename, ['admin', 'manager', 'supplier'], true);
+                    $isCustomer = auth()->user()->rolename === 'customer';
+                @endphp
+
+                @if ($isEmployee)
                     <flux:sidebar.item icon="archive-box" :href="route('inventory.index')"
                         :current="request()->routeIs('inventory.*')" wire:navigate>
                         {{ __('Magazijn') }}
@@ -32,16 +37,19 @@
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="truck" :href="route('supplier.index')" :current="request()->routeIs('supplier.index')" wire:navigate>
                         {{ __('Leverancier Overzicht') }}
-                    </flux:sidebar.item>  
+                    </flux:sidebar.item>
+                @endif
+
+                @if ($isCustomer)
+                    @php
+                        $clientId = \App\Models\Client::where('Id', auth()->id())->value('Id');
+                    @endphp
                     <flux:sidebar.item icon="truck" :href="route('customersregistration.index')" :current="request()->routeIs('customersregistration.index')" wire:navigate>
-                        {{ __('Klantregistratie') }}
+                        {{ __('registratie') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="shopping-bag" :href="route('customersorders.index', auth()->user()->id)" :current="request()->routeIs('customersorders.*')" wire:navigate>
-                        {{ __('Mijn Bestellingen') }}
+                    <flux:sidebar.item icon="plus" :href="$clientId ? route('customersorders.create', $clientId) : route('customersregistration.index')" :current="request()->routeIs('customersorders.create')" wire:navigate>
+                        {{ __('Bestellen') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="plus" :href="route('customersorders.create', auth()->user()->id)" :current="request()->routeIs('customersorders.create')" wire:navigate>
-                        {{ __('Nieuw Pakket Bestellen') }}
-                    </flux:sidebar.item>              
                 @endif
             </flux:sidebar.group>
 

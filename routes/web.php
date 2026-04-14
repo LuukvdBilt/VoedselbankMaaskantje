@@ -1,30 +1,28 @@
 <?php
 
-use App\Http\Controllers\InventoryController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AllergiesController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\CustomerRegistrationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SupplierController;
+use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 
 Route::get('/allergies', [AllergiesController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-
-    // ALLERGIES CRUD (BELANGRIJK!)
-    Route::resource('allergies', AllergiesController::class);
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::resource('inventory', InventoryController::class)
-        ->middleware('role:admin,manager');
+        ->middleware('role:admin,manager,supplier');
 
-        Route::resource('allergies', AllergiesController::class)
-        ->middleware('role:admin,manager');
+    Route::resource('allergies', AllergiesController::class)
+        ->middleware('role:admin,manager,supplier');
 });
 
-//supplier routes
+// supplier routes
 Route::get('/supplier', [SupplierController::class, 'index'])->name('supplier.index');
 Route::get('/supplier/{id}/edit', [SupplierController::class, 'edit'])->name('supplier.edit');
 Route::put('/supplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');

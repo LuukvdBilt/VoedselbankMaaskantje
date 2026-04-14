@@ -24,4 +24,49 @@ class DashboardTest extends TestCase
         $response = $this->get(route('dashboard'));
         $response->assertOk();
     }
+
+    public function test_customer_sees_only_customer_actions_in_navigation(): void
+    {
+        $user = User::factory()->create([
+            'rolename' => 'customer',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('registratie');
+        $response->assertSee('Naar bestellen');
+        $response->assertDontSee('Magazijn');
+        $response->assertDontSee('Leverancier Overzicht');
+    }
+
+    public function test_employee_sees_employee_actions_in_navigation(): void
+    {
+        $user = User::factory()->create([
+            'rolename' => 'manager',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('Magazijn');
+        $response->assertSee('Leverancier Overzicht');
+        $response->assertDontSee('Klant Bestellen');
+        $response->assertDontSee('Klantregistratie');
+    }
+
+    public function test_supplier_sees_employee_actions_in_navigation(): void
+    {
+        $user = User::factory()->create([
+            'rolename' => 'supplier',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('Magazijn');
+        $response->assertSee('Leverancier Overzicht');
+        $response->assertDontSee('Klant Bestellen');
+        $response->assertDontSee('Klantregistratie');
+    }
 }

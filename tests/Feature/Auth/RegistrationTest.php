@@ -26,7 +26,10 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-        $response = $this->post(route('register.store'), [
+        $token = 'test-csrf-token';
+
+        $response = $this->withSession(['_token' => $token])->post(route('register.store'), [
+            '_token' => $token,
             'name' => 'John Doe',
             'email' => 'test@example.com',
             'password' => 'password',
@@ -34,7 +37,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $response->assertSessionHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect(route('customersregistration.index', absolute: false));
 
         $this->assertAuthenticated();
     }

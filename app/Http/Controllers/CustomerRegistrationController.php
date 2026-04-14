@@ -108,10 +108,8 @@ class CustomerRegistrationController extends Controller
             $household->save();
 
             // ===== SUCCESS REDIRECT =====
-            // redirect() = Create redirect response
-            // ->route() = Go to named route 'customersregistration.index'
-            // ->with() = Pass session data ('success' message shows once, then disappears)
-            return redirect()->route('customersregistration.index')
+            // Eerste registratie: stuur gebruiker naar dashboard.
+            return redirect()->route('dashboard')
                 ->with('success', 'Registratie succesvol opgeslagen!');
 
         } catch (\Exception $e) {

@@ -15,9 +15,13 @@ class CustomerOrderController extends Controller
 
     public function index($clientId)
     {
-        // Client::findOrFail($clientId) = Find Client by Id, throw 404 if not found
+        // Client::find($clientId) = Find Client by Id, return null if not found
         // Query: SELECT * FROM Client WHERE Id = $clientId LIMIT 1
-        $client = Client::findOrFail($clientId);
+        $client = Client::find($clientId);
+        if (! $client) {
+            return redirect()->route('customersregistration.index')
+                ->with('error', 'Registreer eerst je klantgegevens voordat je bestellingen bekijkt.');
+        }
 
         // FoodPackageDistribution::whereHas() = Filter by related household
         // ->with() = Eager load relationships to avoid N+1 queries
@@ -45,10 +49,14 @@ class CustomerOrderController extends Controller
     // Show form to create a new food package distribution
     public function create($clientId)
     {
-        // Client::findOrFail($clientId) = Find Client by Id, throw 404 if not found
+        // Client::find($clientId) = Find Client by Id, return null if not found
         // Query: SELECT * FROM Client WHERE Id = $clientId LIMIT 1
-        $client = Client::findOrFail($clientId);
-        
+        $client = Client::find($clientId);
+        if (! $client) {
+            return redirect()->route('customersregistration.index')
+                ->with('error', 'Registreer eerst je klantgegevens voordat je een bestelling plaatst.');
+        }
+
         // FoodPackage::where('is_active', true) = Get only active food packages
         // ->with() = Eager load relationships (products, allergies)
         // Query: SELECT * FROM FoodPackages WHERE is_active = true
@@ -123,11 +131,11 @@ class CustomerOrderController extends Controller
         // Client::findOrFail($clientId) = Find Client by Id, throw 404 if not found
         // Query: SELECT * FROM Client WHERE Id = $clientId LIMIT 1
         $client = Client::findOrFail($clientId);
-        
+
         // FoodPackageDistribution::findOrFail($orderId) = Find distribution by Id
         // Query: SELECT * FROM FoodPackageDistribution WHERE Id = $orderId LIMIT 1
         $distribution = FoodPackageDistribution::findOrFail($orderId);
-        
+
         // Load active food packages with relationships
         $foodPackages = FoodpackageModel::where('is_active', true)
             ->with(['products', 'allergies'])
@@ -239,5 +247,4 @@ class CustomerOrderController extends Controller
                 ->with('error', 'Er is een fout opgetreden bij het verwijderen van de bestelling.');
         }
     }
-
 }

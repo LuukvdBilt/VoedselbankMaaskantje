@@ -12,9 +12,16 @@
             </p>
         </div>
 
+        @php
+            $isEmployee = in_array(auth()->user()->rolename, ['admin', 'manager', 'supplier'], true);
+            $isCustomer = auth()->user()->rolename === 'customer';
+        @endphp
+
+        @if ($isEmployee)
+
         <!-- Quick Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <!-- Stat Card 1: Total Clients -->
+            <!-- Stat Card 1: Suppliers -->
             <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
                 <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent dark:from-green-900/10 dark:to-transparent"></div>
                 <div class="relative">
@@ -25,17 +32,17 @@
                             </svg>
                         </div>
                         <span class="text-xs font-semibold text-green-600 bg-green-100 dark:bg-green-900/30 px-3 py-1 rounded-full">
-                            +5% deze week
+                            live uit DB
                         </span>
                     </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Totale Klanten</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Leveranciers</p>
                     <p class="text-3xl font-black text-green-900 dark:text-white">
-                        284
+                        {{ $supplierCount }}
                     </p>
                 </div>
             </div>
 
-            <!-- Stat Card 2: Food Packages -->
+            <!-- Stat Card 2: Inventory Items -->
             <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
                 <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-transparent dark:from-amber-900/10 dark:to-transparent"></div>
                 <div class="relative">
@@ -46,17 +53,17 @@
                             </svg>
                         </div>
                         <span class="text-xs font-semibold text-amber-600 bg-amber-100 dark:bg-amber-900/30 px-3 py-1 rounded-full">
-                            47 beschikbaar
+                            {{ $inventoryStockTotal }} stuks
                         </span>
                     </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Voedsel Pakketten</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Magazijn regels</p>
                     <p class="text-3xl font-black text-amber-600 dark:text-amber-400">
-                        47
+                        {{ $inventoryItemCount }}
                     </p>
                 </div>
             </div>
 
-            <!-- Stat Card 3: Distributions -->
+            <!-- Stat Card 3: Allergies -->
             <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
                 <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent dark:from-blue-900/10 dark:to-transparent"></div>
                 <div class="relative">
@@ -67,17 +74,17 @@
                             </svg>
                         </div>
                         <span class="text-xs font-semibold text-blue-600 bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-full">
-                            Deze week
+                            actief
                         </span>
                     </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Distributies</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Allergieën</p>
                     <p class="text-3xl font-black text-blue-600 dark:text-blue-400">
-                        23
+                        {{ $allergyCount }}
                     </p>
                 </div>
             </div>
 
-            <!-- Stat Card 4: Pending Requests -->
+            <!-- Stat Card 4: Active Orders -->
             <div class="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
                 <div class="absolute inset-0 bg-gradient-to-br from-red-50 to-transparent dark:from-red-900/10 dark:to-transparent"></div>
                 <div class="relative">
@@ -88,12 +95,12 @@
                             </svg>
                         </div>
                         <span class="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 px-3 py-1 rounded-full">
-                            Aandacht nodig
+                            openstaand
                         </span>
                     </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Verzoeken In Behandeling</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Actieve bestellingen</p>
                     <p class="text-3xl font-black text-red-600 dark:text-red-400">
-                        8
+                        {{ $activeOrderCount }}
                     </p>
                 </div>
             </div>
@@ -167,19 +174,19 @@
 
             <!-- Quick Actions Sidebar -->
             <div class="space-y-4">
-                <!-- Action Card 1: Registreer Info -->
+                <!-- Action Card 1: Suppliers -->
                 <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
                     <div class="h-1 bg-gradient-to-r from-green-500 to-green-600"></div>
                     <div class="p-6">
                         <div class="flex items-start justify-between mb-2">
-                            <h3 class="font-bold text-green-900 dark:text-white">Mijn Gegevens</h3>
+                            <h3 class="font-bold text-green-900 dark:text-white">Leverancier Overzicht</h3>
                             <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Update je registratiegegevens en gezinssamenstelling</p>
-                        <a href="{{ route('customersregistration.index') }}" class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-green-500/30">
-                            Bijwerken
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Bekijk en beheer alle leveranciers op een plek.</p>
+                        <a href="{{ route('supplier.index') }}" class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-green-500/30">
+                            Openen
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
@@ -187,19 +194,19 @@
                     </div>
                 </div>
 
-                <!-- Action Card 2: Bestel Pakketje -->
+                <!-- Action Card 2: Inventory -->
                 <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
                     <div class="h-1 bg-gradient-to-r from-amber-500 to-amber-600"></div>
                     <div class="p-6">
                         <div class="flex items-start justify-between mb-2">
-                            <h3 class="font-bold text-green-900 dark:text-white">Bestel Pakket</h3>
+                            <h3 class="font-bold text-green-900 dark:text-white">Magazijn</h3>
                             <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
                         </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Plaats een nieuwe bestelling voor je voedselpakket</p>
-                        <a href="{{ route('customersorders.create', auth()->user()->id ?? 1) }}" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-amber-500/30">
-                            Bestellen
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Controleer voorraad en beheer producten in het magazijn.</p>
+                        <a href="{{ route('inventory.index') }}" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-amber-500/30">
+                            Openen
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
@@ -207,19 +214,19 @@
                     </div>
                 </div>
 
-                <!-- Action Card 3: Mijn Bestellingen -->
+                <!-- Action Card 3: Allergies -->
                 <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
                     <div class="h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
                     <div class="p-6">
                         <div class="flex items-start justify-between mb-2">
-                            <h3 class="font-bold text-green-900 dark:text-white">Mijn Bestellingen</h3>
+                            <h3 class="font-bold text-green-900 dark:text-white">Allergieën</h3>
                             <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                             </svg>
                         </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Bekijk al je huidige en vorige bestellingen</p>
-                        <a href="{{ route('customersorders.index', auth()->user()->id ?? 1) }}" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-blue-500/30">
-                            Bekijken
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Beheer allergieën voor veilige pakket-samenstelling.</p>
+                        <a href="{{ route('allergies.index') }}" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-blue-500/30">
+                            Openen
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
@@ -305,5 +312,56 @@
                 </table>
             </div>
         </div>
+
+        @elseif ($isCustomer)
+            @php
+                $clientId = \App\Models\Client::where('Id', auth()->id())->value('Id');
+                $orderUrl = $clientId ? route('customersorders.create', $clientId) : route('customersregistration.index');
+            @endphp
+
+            <div class="rounded-3xl bg-gradient-to-br from-green-900 to-green-800 text-white p-8 md:p-10 mb-8">
+                <p class="text-amber-300 text-sm font-semibold uppercase tracking-wider mb-2">Klantportaal</p>
+                <h2 class="text-3xl md:text-4xl font-bold leading-tight mb-4">Welkom bij jouw voedselbank dashboard</h2>
+                <p class="text-white/80 max-w-2xl">Registreer je gegevens en plaats daarna eenvoudig je bestelling. Zo kunnen wij sneller het juiste pakket voor je klaarzetten.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-7 shadow-sm">
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-green-900 dark:text-white mb-2">Klantregistratie</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-5">Vul of wijzig je gegevens zodat je bestelling goed verwerkt kan worden.</p>
+                    <a href="{{ route('customersregistration.index') }}" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                        Naar registratie
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-7 shadow-sm">
+                    <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-green-900 dark:text-white mb-2">Klant bestellen</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-5">Nog niet geregistreerd? Dan sturen we je eerst automatisch naar de registratiepagina.</p>
+                    <a href="{{ $orderUrl }}" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                        Naar bestellen
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        @else
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6">
+                <p class="text-gray-700 dark:text-gray-300">Voor jouw rol zijn er momenteel geen dashboard-acties ingesteld.</p>
+            </div>
+        @endif
     </div>
 </x-layouts::app>
