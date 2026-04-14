@@ -158,7 +158,6 @@ class SupplierController extends Controller
             // Check if a supplier with the same name and phone already exists to prevent duplicates
             $exists = ContactModel::where('FirstName', $validated['FirstName'])
                 ->where('LastName', $validated['LastName'])
-                ->where('Phone', $validated['Phone'])
                 ->exists();
 
             // Return error if duplicate supplier is found
@@ -172,6 +171,7 @@ class SupplierController extends Controller
                     ->withInput()
                     ->with('error', 'Deze leverancier bestaat al.');
             }
+            else {
 
             // Create new supplier in the database
             $this->supplier->createSupplier($validated);
@@ -185,6 +185,7 @@ class SupplierController extends Controller
             // Redirect to index with success message
             return redirect()->route('supplier.index')
                 ->with('success', 'Leverancier succesvol aangemaakt.');
+            }
         } catch (ValidationException $e) {
             // Re-throw validation exceptions to be handled by Laravel's validation error handler
             throw $e;
