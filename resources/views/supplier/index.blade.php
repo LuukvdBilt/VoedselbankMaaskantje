@@ -100,7 +100,7 @@
                                     <th class="px-6 py-4 font-medium">Contactpersoon</th>
                                     <th class="px-6 py-4 font-medium">Mobiel</th>
                                     <th class="px-6 py-4 font-medium">Status</th>
-                                    <th class="px-6 py-4 font-medium text-right">Acties</th>
+                                    <th class="px-6 py-4 font-medium text-center">Acties</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-neutral-100">
