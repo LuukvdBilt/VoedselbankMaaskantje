@@ -13,39 +13,47 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //Admin user for testing purposes
+        // Admin user for testing purposes
 
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@maaskantje.com',
-            'password' => bcrypt('achraf123'),
-            'rolename' => 'admin',
-        ]);
+        User::query()->updateOrCreate(
+            ['email' => 'admin@maaskantje.com'],
+            [
+                'name' => 'Admin',
+                'password' => bcrypt('achraf123'),
+                'rolename' => 'admin',
+            ]
+        );
 
         // Manager user for testing purposes
-        User::factory()->create([
-            'name' => 'Manager',
-            'email' => 'manager@maaskantje.com',
-            'password' => bcrypt('achraf123'),
-            'rolename' => 'manager',
-        ]);
+        User::query()->updateOrCreate(
+            ['email' => 'manager@maaskantje.com'],
+            [
+                'name' => 'Manager',
+                'password' => bcrypt('achraf123'),
+                'rolename' => 'manager',
+            ]
+        );
 
         // Customer user for testing purposes
 
-        User::factory()->create([
-            'name' => 'Customer',
-            'email' => 'customer@maaskantje.com',
-            'password' => bcrypt('achraf123'),
-            'rolename' => 'customer',
-        ]);
+        User::query()->updateOrCreate(
+            ['email' => 'customer@maaskantje.com'],
+            [
+                'name' => 'Customer',
+                'password' => bcrypt('achraf123'),
+                'rolename' => 'customer',
+            ]
+        );
 
         // Supplier user for testing purposes
-        User::factory()->create([
-            'name' => 'Supplier',
-            'email' => 'supplier@maaskantje.com',
-            'password' => bcrypt('achraf123'),
-            'rolename' => 'supplier',
-        ]);
+        User::query()->updateOrCreate(
+            ['email' => 'supplier@maaskantje.com'],
+            [
+                'name' => 'Supplier',
+                'password' => bcrypt('achraf123'),
+                'rolename' => 'supplier',
+            ]
+        );
 
         $this->call([
             ContactSeeder::class,
@@ -55,6 +63,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ProductSeeder::class,
             InventorySeeder::class,
+            FoodPackageSeeder::class,
         ]);
     }
 }

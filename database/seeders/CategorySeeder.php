@@ -2,13 +2,30 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Category;
+use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        Category::factory()->count(10)->create();
+        $categories = [
+            'Groenten',
+            'Fruit',
+            'Zuivel',
+            'Vlees',
+            'Dranken',
+            'Granen',
+            'Conserven',
+            'Pasta',
+            'Brood',
+        ];
+
+        foreach ($categories as $name) {
+            Category::query()->updateOrCreate(
+                ['Name' => $name],
+                ['is_active' => true]
+            );
+        }
     }
 }

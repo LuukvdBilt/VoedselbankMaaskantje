@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\AllergiesModel;
+use Illuminate\Database\Seeder;
 
 class AllergiesSeeder extends Seeder
 {
@@ -21,8 +21,13 @@ class AllergiesSeeder extends Seeder
         ];
 
         foreach ($allergies as $item) {
-            // Maak per item een record aan zodat de seeder idempotent gedrag via DB-opschoning kan volgen.
-            AllergiesModel::create($item);
+            AllergiesModel::query()->updateOrCreate(
+                ['Name' => $item['Name']],
+                [
+                    'Description' => $item['Description'],
+                    'is_active' => true,
+                ]
+            );
         }
     }
 }

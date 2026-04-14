@@ -21,7 +21,12 @@ return new class extends Migration
         DB::statement('DROP PROCEDURE IF EXISTS DeleteInventoryById;');
         DB::statement('DROP PROCEDURE IF EXISTS updateInventory;');
         DB::statement('DROP PROCEDURE IF EXISTS InsertInventory;');
-
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getSupplierById;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_updateSupplier;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_createSupplier;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_deleteSupplier;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllSuppliers;');
+        DB::statement('DROP PROCEDURE IF EXISTS sp_getAllAllergies;');
         /*
         |--------------------------------------------------------------------------
         | CREATE sp_getAllSuppliers

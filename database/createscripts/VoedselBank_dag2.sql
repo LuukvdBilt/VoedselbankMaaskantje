@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS FoodBankDB;
-CREATE DATABASE FoodBankDB;
+
 USE FoodBankDB;
 
 -- =====================

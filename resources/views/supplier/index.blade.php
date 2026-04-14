@@ -67,8 +67,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-neutral-600 dark:text-neutral-400">{{ $supplier->Address }}</td>
                                 <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">{{ $supplier->FullName }}</td>
-                                </td>
-                                <td class="px-6 py-4 text-neutral-600 dark:text-neutral-400">{{ $supplier->Email }}</td>
+                                <td class="px-6 py-4 text-neutral-600 dark:text-neutral-400">—</td>
                                 <td class="px-6 py-4 text-neutral-600 dark:text-neutral-400">{{ $supplier->Phone }}</td>
                                 <td class="px-6 py-4">
                                     <a href="{{ route('supplier.edit', $supplier->Id) }}"

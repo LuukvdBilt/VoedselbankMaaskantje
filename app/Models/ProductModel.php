@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ProductModel extends Model
 {
     use HasFactory;
+
     protected $table = 'Product';
+
     protected $primaryKey = 'Id';
 
     protected $fillable = [
@@ -17,43 +20,11 @@ class ProductModel extends Model
         'CategoryId',
         'SupplierId',
         'is_active',
-        'note'
+        'note',
     ];
 
-    /**
-     * Relatie: product hoort bij een categorie.
-     */
-    public function category()
+    protected static function newFactory(): ProductFactory
     {
-        return $this->belongsTo(
-            Category::class,
-            'CategoryId',
-            'Id'
-        );
-    }
-
-    /**
-     * Relatie: product hoort bij een leverancier.
-     */
-    public function supplier()
-    {
-        return $this->belongsTo(
-            SupplierModel::class,
-            'SupplierId',
-            'Id'
-        );
-    }
-
-    /**
-     * Relatie: product zit in meerdere voedselpakketten.
-     */
-    public function foodPackages()
-    {
-        return $this->belongsToMany(
-            FoodpackageModel::class,
-            'FoodPackage_Products',
-            'ProductId',
-            'FoodPackageId'
-        );
+        return ProductFactory::new();
     }
 }
