@@ -7,6 +7,13 @@
             Nieuwe allergie toevoegen
         </h1>
 
+        {{-- Toon validatiefouten bovenaan het formulier, zoals een dubbele allergienaam. --}}
+        @if($errors->any())
+            <div class="mb-4 rounded-lg bg-red-600 text-white px-4 py-2 animate-fade">
+                {{ $errors->first('Name') ?? $errors->first() }}
+            </div>
+        @endif
+
         {{-- Toon success feedback na opslaan. --}}
         @if(session('success'))
             <div class="mb-4 rounded-lg bg-green-600 text-white px-4 py-2 animate-fade">
