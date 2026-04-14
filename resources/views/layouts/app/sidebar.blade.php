@@ -32,7 +32,16 @@
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="truck" :href="route('supplier.index')" :current="request()->routeIs('supplier.index')" wire:navigate>
                         {{ __('Leverancier Overzicht') }}
-                    </flux:sidebar.item>                
+                    </flux:sidebar.item>  
+                    <flux:sidebar.item icon="truck" :href="route('customersregistration.index')" :current="request()->routeIs('customersregistration.index')" wire:navigate>
+                        {{ __('Klantregistratie') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="shopping-bag" :href="route('customersorders.index', auth()->user()->id)" :current="request()->routeIs('customersorders.*')" wire:navigate>
+                        {{ __('Mijn Bestellingen') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="plus" :href="route('customersorders.create', auth()->user()->id)" :current="request()->routeIs('customersorders.create')" wire:navigate>
+                        {{ __('Nieuw Pakket Bestellen') }}
+                    </flux:sidebar.item>              
                 @endif
             </flux:sidebar.group>
 

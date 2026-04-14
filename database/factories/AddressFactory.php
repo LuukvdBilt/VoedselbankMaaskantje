@@ -1,0 +1,22 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Address;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class AddressFactory extends Factory
+{
+    protected $model = Address::class;
+
+    public function definition(): array
+    {
+        return [
+            'Street' => $this->faker->streetName(),
+            'HouseNumber' => (string)$this->faker->numberBetween(1, 200),
+            'PostalCode' => $this->faker->postcode(),
+            'City' => $this->faker->city(),
+            'is_active' => true,
+        ];
+    }
+}

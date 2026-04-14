@@ -108,16 +108,6 @@
                         @endif
                     </div>
 
-                    <!-- Wensen -->
-                    <div class="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Wensen
-                        </label>
-                        <textarea name="wishes" placeholder="Bijzondere wensen..."
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                            rows="3">{{ old('wishes', $distribution->wishes ?? '') }}</textarea>
-                    </div>
-
                     <!-- Postcode -->
                     <div class="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
