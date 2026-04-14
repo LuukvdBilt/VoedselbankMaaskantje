@@ -317,6 +317,7 @@
             @php
                 $clientId = \App\Models\Client::where('Id', auth()->id())->value('Id');
                 $orderUrl = $clientId ? route('customersorders.create', $clientId) : route('customersregistration.index');
+                $orderOverviewUrl = $clientId ? route('customersorders.index', $clientId) : route('customersregistration.index');
             @endphp
 
             <div class="rounded-3xl bg-gradient-to-br from-green-900 to-green-800 text-white p-8 md:p-10 mb-8">
@@ -332,7 +333,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-green-900 dark:text-white mb-2">Klantregistratie</h3>
+                    <h3 class="text-xl font-bold text-green-900 dark:text-white mb-2">registratie</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 mb-5">Vul of wijzig je gegevens zodat je bestelling goed verwerkt kan worden.</p>
                     <a href="{{ route('customersregistration.index') }}" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
                         Naar registratie
@@ -348,14 +349,22 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-green-900 dark:text-white mb-2">Klant bestellen</h3>
+                    <h3 class="text-xl font-bold text-green-900 dark:text-white mb-2">bestellen</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 mb-5">Nog niet geregistreerd? Dan sturen we je eerst automatisch naar de registratiepagina.</p>
-                    <a href="{{ $orderUrl }}" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ $orderUrl }}" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
                         Naar bestellen
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
-                    </a>
+                        </a>
+                        <a href="{{ $orderOverviewUrl }}" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                            Naar overzicht
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         @else

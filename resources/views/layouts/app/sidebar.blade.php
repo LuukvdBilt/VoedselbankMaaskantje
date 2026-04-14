@@ -48,7 +48,10 @@
                         {{ __('registratie') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="plus" :href="$clientId ? route('customersorders.create', $clientId) : route('customersregistration.index')" :current="request()->routeIs('customersorders.create')" wire:navigate>
-                        {{ __('Bestellen') }}
+                        {{ __('bestellen') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="clipboard-document-list" :href="$clientId ? route('customersorders.index', $clientId) : route('customersregistration.index')" :current="request()->routeIs('customersorders.index')" wire:navigate>
+                        {{ __('overzicht Bestellingen') }}
                     </flux:sidebar.item>
                 @endif
             </flux:sidebar.group>

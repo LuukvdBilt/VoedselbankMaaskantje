@@ -36,6 +36,7 @@ class DashboardTest extends TestCase
         $response->assertOk();
         $response->assertSee('registratie');
         $response->assertSee('Naar bestellen');
+        $response->assertSee('Naar overzicht');
         $response->assertDontSee('Magazijn');
         $response->assertDontSee('Leverancier Overzicht');
     }
@@ -51,8 +52,8 @@ class DashboardTest extends TestCase
         $response->assertOk();
         $response->assertSee('Magazijn');
         $response->assertSee('Leverancier Overzicht');
-        $response->assertDontSee('Klant Bestellen');
-        $response->assertDontSee('Klantregistratie');
+        $response->assertDontSee('Naar bestellen');
+        $response->assertDontSee('Naar overzicht');
     }
 
     public function test_supplier_sees_employee_actions_in_navigation(): void
@@ -66,7 +67,7 @@ class DashboardTest extends TestCase
         $response->assertOk();
         $response->assertSee('Magazijn');
         $response->assertSee('Leverancier Overzicht');
-        $response->assertDontSee('Klant Bestellen');
-        $response->assertDontSee('Klantregistratie');
+        $response->assertDontSee('Naar bestellen');
+        $response->assertDontSee('Naar overzicht');
     }
 }
