@@ -119,7 +119,25 @@ class InventoryController extends Controller
      */
     public function edit(string $id)
     {
-        $inventoryItem = Inventory::find($id);
+        $inventoryItem = DB::table('Inventory as i')
+            ->join('Product as p', 'i.ProductId', '=', 'p.Id')
+            ->join('Category as c', 'p.CategoryId', '=', 'c.Id')
+            ->leftJoin('Supplier as s', 'i.SupplierId', '=', 's.Id')
+            ->select([
+                'i.Id',
+                'p.ProductName',
+                'p.Barcode',
+                'c.Name as Category',
+                's.CompanyName as Supplier',
+                'i.Quantity',
+                'i.ExpirationDate',
+                'i.note as InventoryNote',
+                'p.note as ProductNote',
+            ])
+            ->where('i.Id', $id)
+            ->first();
+
+        abort_unless($inventoryItem !== null, 404);
 
         return view('Inventory.edit', compact('inventoryItem'));
     }
