@@ -70,14 +70,12 @@ class CustomerOrderController extends Controller
         // All other fields are optional (nullable)
         $validated = $request->validate([
             'food_package_id' => 'required|exists:FoodPackages,Id',
-            'wishes' => 'nullable|string|max:500',
             'postal_code' => 'nullable|string|max:20',
             'house_number' => 'nullable|string|max:10',
             'note' => 'nullable|string|max:500',
         ], [
             'food_package_id.required' => 'Voedselpakket is verplicht.',
             'food_package_id.exists' => 'Het geselecteerde voedselpakket bestaat niet.',
-            'wishes.max' => 'Wensen mag niet langer zijn dan 500 karakters.',
             'postal_code.max' => 'Postcode mag niet langer zijn dan 20 karakters.',
             'house_number.max' => 'Huisnummer mag niet langer zijn dan 10 karakters.',
             'note.max' => 'Opmerking mag niet langer zijn dan 500 karakters.',
@@ -155,14 +153,12 @@ class CustomerOrderController extends Controller
         // $request->validate() = Validate incoming request data
         $validated = $request->validate([
             'food_package_id' => 'required|exists:FoodPackages,Id',
-            'wishes' => 'nullable|string|max:500',
             'postal_code' => 'nullable|string|max:20',
             'house_number' => 'nullable|string|max:10',
             'note' => 'nullable|string|max:500',
         ], [
             'food_package_id.required' => 'Voedselpakket is verplicht.',
             'food_package_id.exists' => 'Het geselecteerde voedselpakket bestaat niet.',
-            'wishes.max' => 'Wensen mag niet langer zijn dan 500 karakters.',
             'postal_code.max' => 'Postcode mag niet langer zijn dan 20 karakters.',
             'house_number.max' => 'Huisnummer mag niet langer zijn dan 10 karakters.',
             'note.max' => 'Opmerking mag niet langer zijn dan 500 karakters.',
@@ -243,4 +239,5 @@ class CustomerOrderController extends Controller
                 ->with('error', 'Er is een fout opgetreden bij het verwijderen van de bestelling.');
         }
     }
+
 }

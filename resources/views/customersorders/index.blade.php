@@ -104,13 +104,13 @@
                                 <!-- Allergies -->
                                 @if($distribution->foodPackage->allergies && $distribution->foodPackage->allergies->count() > 0)
                                     <div class="mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
-                                        <p class="text-sm font-semibold text-red-600 dark:text-red-400 mb-3">
+                                            <p class="text-sm font-semibold text-red-600 dark:text-red-400 mb-3">
                                             <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M13.707 1.293a1 1 0 00-1.414 0L.293 13.707a1 1 0 000 1.414l12.414 12.414a1 1 0 001.414 0l12.414-12.414a1 1 0 000-1.414L13.707 1.293zM2 13.414L13.414 2l11.414 11.414L13.414 24 2 13.414z" clip-rule="evenodd" />
                                             </svg>
                                             Allergieën
                                         </p>
-                                        <div class="flex flex-wrap gap-2">
+                                            <div class="flex flex-wrap gap-2">
                                             @foreach($distribution->foodPackage->allergies as $allergy)
                                                 <span class="inline-block px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs rounded-full">
                                                     {{ $allergy->Name }}
@@ -120,14 +120,13 @@
                                     </div>
                                 @endif
 
-                                <!-- Special Requests/Notes -->
                                 @if($distribution->note)
                                     <div class="mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
                                         <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                            <svg class="w-4 h-4 inline mr-1 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <svg class="w-4 h-4 inline mr-1 text-cyan-600" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zm-11-1a1 1 0 11-2 0 1 1 0 012 0zM8 8a1 1 0 000 2h6a1 1 0 000-2H8zm0 3a1 1 0 000 2h3a1 1 0 000-2H8z" clip-rule="evenodd" />
                                             </svg>
-                                            Opmerkingen
+                                            Opmerking
                                         </p>
                                         <p class="text-sm text-gray-700 dark:text-gray-300 italic bg-gray-50 dark:bg-slate-700 p-3 rounded">{{ $distribution->note }}</p>
                                     </div>
