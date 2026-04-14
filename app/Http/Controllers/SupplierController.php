@@ -33,9 +33,9 @@ class SupplierController extends Controller
      * based on the requested page number.
      *
      * @param  Request  $request  The HTTP request instance
-     * @return View The supplier index view with paginated data
+     * @return View|RedirectResponse The supplier index view with paginated data or redirect on error
      */
-    public function index(Request $request)
+    public function index(Request $request): View|RedirectResponse
     {
         try {
             // Set the number of suppliers per page
@@ -46,6 +46,8 @@ class SupplierController extends Controller
 
             // Fetch all suppliers from the database and convert to collection
             $allSuppliers = collect($this->supplier->getAllSuppliers());
+
+            $totalIsActive = $allSuppliers->where('IsActive', 1)->count();
 
             // Calculate the offset based on page number and items per page
             $offset = ($page - 1) * $perPage;
@@ -66,7 +68,11 @@ class SupplierController extends Controller
             Log::info('Suppliers retrieved successfully', ['page' => $page, 'total' => $allSuppliers->count()]);
 
             // Return the view with paginated suppliers
-            return view('supplier.index', ['suppliers' => $suppliersPaginated]);
+            return view('supplier.index', [
+                'suppliers' => $suppliersPaginated, 
+                'IsActive' => $totalIsActive
+                ]);
+                
         } catch (\Exception $e) {
             // Log any unexpected errors with full context for debugging
             Log::error('Error retrieving suppliers', [

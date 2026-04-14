@@ -41,7 +41,8 @@ return new class extends Migration
                 c.Phone,
                 u.Email,
                 CONCAT(c.FirstName, ' ', c.LastName) AS FullName,
-                s.CompanyName
+                s.CompanyName,
+                s.is_active AS IsActive
             FROM Supplier s
             LEFT JOIN Contact c ON s.ContactId = c.Id
             LEFT JOIN Address a ON c.AddressId = a.Id
