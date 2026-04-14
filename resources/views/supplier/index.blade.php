@@ -65,7 +65,8 @@
                 </div>
                 <div class="mt-4">
                     <p class="text-sm font-medium text-neutral-500">Actieve Contracten</p>
-                    <h3 class="text-3xl font-bold text-amber-600">{{ $IsActive ?? 0 }}</h3> <!-- Vervang door dynamische data -->
+                    <h3 class="text-3xl font-bold text-amber-600">{{ $IsActive ?? 0 }}</h3>
+                    <!-- Vervang door dynamische data -->
                 </div>
             </div>
 
@@ -98,6 +99,7 @@
                                     <th class="px-6 py-4 font-medium">Bedrijf</th>
                                     <th class="px-6 py-4 font-medium">Contactpersoon</th>
                                     <th class="px-6 py-4 font-medium">Mobiel</th>
+                                    <th class="px-6 py-4 font-medium">Status</th>
                                     <th class="px-6 py-4 font-medium text-right">Acties</th>
                                 </tr>
                             </thead>
@@ -115,7 +117,8 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 text-neutral-600">{{ $supplier->Phone }}</td>
-                                        <td class="px-6 py-4 text-neutral-600">{{ $supplier->IsActive ? 'Actief' : 'Inactief' }}</td>
+                                        <td class="px-6 py-4 text-neutral-600">
+                                            {{ $supplier->IsActive ? 'Actief' : 'Inactief' }}</td>
                                         <td class="px-6 py-4 flex items-center justify-end gap-3">
                                             <a href="{{ route('supplier.edit', $supplier->Id) }}"
                                                 class="text-blue-500 hover:text-blue-700 transition">
