@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\ContactModel;
 use App\Models\AddressModel;
+use App\Models\ContactModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,7 +17,7 @@ class ContactModelFactory extends Factory
      *
      * @return array<string, mixed>
      */
-     // Nederlandse locale instellen
+    // Nederlandse locale instellen
     public function definition(): array
     {
         $faker = \Faker\Factory::create('nl_NL');
@@ -26,7 +26,7 @@ class ContactModelFactory extends Factory
             'UserId' => User::factory(),
             'FirstName' => $faker->firstName(),
             'LastName' => $faker->lastName(),
-            'Phone' => $faker->phoneNumber(),
+            'Phone' => $faker->numerify('06########'),
             'AddressId' => AddressModel::factory(),
             'is_active' => true,
             'note' => $faker->sentence(),

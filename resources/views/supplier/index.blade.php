@@ -101,9 +101,6 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="text-neutral-700">{{ $supplier->FullName }}</div>
-                                            <div class="text-xs text-neutral-400 mt-0.5">—
-                                                <!-- Email here if available -->
-                                            </div>
                                         </td>
                                         <td class="px-6 py-4 text-neutral-600">{{ $supplier->Phone }}</td>
                                         <td class="px-6 py-4 text-neutral-600">
