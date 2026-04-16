@@ -1,15 +1,15 @@
 <x-layouts::app :title="__('Leverancier Overzicht')">
     <div class="flex w-full flex-col gap-6 p-4 md:p-6 bg-slate-50/50 min-h-screen">
 
-        <!-- Header Sectie -->
+        <!-- Header Section -->
         <div class="flex flex-col gap-1">
             <h1 class="text-3xl font-bold text-emerald-800 flex items-center gap-2">
                 Leveranciers Dashboard <span class="text-2xl"></span>
             </h1>
-            <p class="text-neutral-500 text-sm">Hier is je overzicht van alle actieve leveranciers</p>
+            <p class="text-neutral-500 text-sm">Here is your overview of all active suppliers</p>
         </div>
 
-        <!-- Meldingen (Success/Error) -->
+        <!-- Notifications (Success/Error) -->
         @if (session('success'))
             <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
                 <div class="flex items-center gap-3">
@@ -26,9 +26,9 @@
             </div>
         @endif
 
-        <!-- KPI / Statistiek Kaarten (Zoals bovenin foto 1) -->
+        <!-- KPI / Statistics Cards (Like top in photo 1) -->
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <!-- Kaart 1 -->
+            <!-- Card 1 -->
             <div class="flex flex-col justify-between rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
                 <div class="flex items-start justify-between">
                     <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
@@ -40,12 +40,12 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <p class="text-sm font-medium text-neutral-500">Totaal Leveranciers</p>
+                    <p class="text-sm font-medium text-neutral-500">Total Suppliers</p>
                     <h3 class="text-3xl font-bold text-emerald-800">{{ $suppliers->total() ?? 0 }}</h3>
                 </div>
             </div>
 
-            <!-- Kaart 2 -->
+            <!-- Card 2 -->
             <div class="flex flex-col justify-between rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
                 <div class="flex items-start justify-between">
                     <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
@@ -56,43 +56,40 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <p class="text-sm font-medium text-neutral-500">Actieve Contracten</p>
+                    <p class="text-sm font-medium text-neutral-500">Active Contracts</p>
                     <h3 class="text-3xl font-bold text-amber-600">{{ $IsActive ?? 0 }}</h3>
-                    <!-- Vervang door dynamische data -->
                 </div>
             </div>
-
-            <!-- (Je kunt hier eventueel meer kaarten toevoegen voor de overige 2 plekken) -->
         </div>
 
-        <!-- Main Content (Tabel links, Acties rechts) -->
+        <!-- Main Content (Table left, Actions right) -->
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
-            <!-- Linker kolom: Tabel (Neemt 2/3 van de ruimte in) -->
+            <!-- Left column: Table (Takes 2/3 of space) -->
             <div class="lg:col-span-2">
                 <div
                     class="flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
-                    <!-- Tabel Header -->
+                    <!-- Table Header -->
                     <div class="flex items-center justify-between border-b border-neutral-100 px-6 py-4">
                         <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2">
                             <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            Alle Leveranciers
+                            All Suppliers
                         </h2>
                     </div>
 
-                    <!-- Tabel Body -->
+                    <!-- Table Body -->
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-neutral-600">
                             <thead class="bg-neutral-50/50 text-xs uppercase text-neutral-500">
                                 <tr>
-                                    <th class="px-6 py-4 font-medium">Bedrijf</th>
-                                    <th class="px-6 py-4 font-medium">Contactpersoon</th>
-                                    <th class="px-6 py-4 font-medium">Mobiel</th>
+                                    <th class="px-6 py-4 font-medium">Company</th>
+                                    <th class="px-6 py-4 font-medium">Contact Person</th>
+                                    <th class="px-6 py-4 font-medium">Mobile</th>
                                     <th class="px-6 py-4 font-medium">Status</th>
-                                    <th class="px-6 py-4 font-medium text-center">Acties</th>
+                                    <th class="px-6 py-4 font-medium text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-neutral-100">
@@ -105,23 +102,23 @@
                                         <td class="px-6 py-4">
                                             <div class="text-neutral-700">{{ $supplier->FullName }}</div>
                                             <div class="text-xs text-neutral-400 mt-0.5">—
-                                                <!-- Email hier als je die hebt -->
+                                                <!-- Email here if available -->
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 text-neutral-600">{{ $supplier->Phone }}</td>
                                         <td class="px-6 py-4 text-neutral-600">
-                                            {{ $supplier->IsActive ? 'Actief' : 'Inactief' }}
+                                            {{ $supplier->IsActive ? 'Active' : 'Inactive' }}
                                         </td>
                                         <td class="px-6 py-4 flex items-center justify-end gap-3">
                                             <a href="{{ route('supplier.edit', $supplier->Id) }}"
                                                 class="text-blue-500 hover:text-blue-700 transition">
-                                                Wijzigen
+                                                Edit
                                             </a>
                                             <div x-data="{ open: false }">
                                                 <!-- Trigger Button -->
                                                 <button @click="open = true" type="button"
                                                     class="text-red-500 hover:text-red-700 transition">
-                                                    Verwijderen
+                                                    Delete
                                                 </button>
 
                                                 <!-- Modal Backdrop -->
@@ -136,18 +133,18 @@
                                                     <!-- Modal Content -->
                                                     <div
                                                         class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4 z-10">
-                                                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Bevestig
-                                                            verwijdering</h3>
+                                                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm
+                                                            deletion</h3>
                                                         <p class="text-gray-600 mb-6">
-                                                            Weet u zeker dat u deze leverancier wilt verwijderen? Deze actie
-                                                            kan niet ongedaan worden gemaakt.
+                                                            Are you sure you want to delete this supplier? This action
+                                                            cannot be undone.
                                                         </p>
 
                                                         <div class="flex justify-end gap-3">
                                                             <!-- Cancel Button -->
                                                             <button @click="open = false"
                                                                 class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition">
-                                                                Annuleren
+                                                                Cancel
                                                             </button>
 
                                                             <!-- Confirm Delete Form -->
@@ -158,7 +155,7 @@
                                                                 @method('DELETE')
                                                                 <button type="submit"
                                                                     class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-md transition">
-                                                                    Ja, verwijderen
+                                                                    Yes, delete
                                                                 </button>
                                                             </form>
                                                         </div>
@@ -170,7 +167,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="4" class="px-6 py-8 text-center text-neutral-500">
-                                            Geen leveranciers gevonden in het systeem.
+                                            No suppliers found in the system.
                                         </td>
                                     </tr>
                                 @endforelse
@@ -178,31 +175,30 @@
                         </table>
                     </div>
 
-                    <!-- Paginering -->
+                    <!-- Pagination -->
                     <div class="border-t border-neutral-100 p-4 bg-neutral-50/30">
                         {{ $suppliers->links() }}
                     </div>
                 </div>
             </div>
 
-            <!-- Rechter kolom: Actie Kaarten (Neemt 1/3 van de ruimte in) -->
+            <!-- Right column: Action Cards (Takes 1/3 of space) -->
             <div class="flex flex-col gap-4">
 
-                <!-- Actiekaart: Nieuwe toevoegen (Lijkt op 'Mijn Gegevens' in je foto) -->
+                <!-- Action Card: Add New (Looks like 'My Data' in your photo) -->
                 <div
                     class="rounded-2xl border-t-4 border-t-emerald-500 bg-white p-6 shadow-sm border-x border-b border-neutral-100">
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-lg font-bold text-emerald-800">Nieuwe Leverancier</h3>
+                        <h3 class="text-lg font-bold text-emerald-800">New Supplier</h3>
                         <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <p class="text-sm text-neutral-500 mb-4">Voeg een nieuwe leverancier toe aan de database om
-                        bestellingen te plaatsen.</p>
+                    <p class="text-sm text-neutral-500 mb-4">Add a new supplier to the database to place orders.</p>
                     <a href="{{ route('supplier.create') }}"
                         class="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600 w-fit">
-                        Toevoegen
+                        Add
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
                             </path>
