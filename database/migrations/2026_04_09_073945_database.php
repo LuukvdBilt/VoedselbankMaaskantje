@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('note')->nullable();
 
             $table->foreign('UserId')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('AddressId')->references('Id')->on('Address')->onDelete('set null');
+            $table->foreign('AddressId')->references('Id')->on('Address')->onDelete('cascade');
         });
 
         Schema::create('Client', function (Blueprint $table) {
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
 
-            $table->foreign('AddressId')->references('Id')->on('Address')->onDelete('set null');
+            $table->foreign('AddressId')->references('Id')->on('Address')->onDelete('cascade');
         });
 
         Schema::create('Category', function (Blueprint $table) {
@@ -77,8 +77,8 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
 
-            $table->foreign('CategoryId')->references('Id')->on('Category');
-            $table->foreign('SupplierId')->references('Id')->on('Supplier');
+            $table->foreign('CategoryId')->references('Id')->on('Category')->onDelete('cascade');
+            $table->foreign('SupplierId')->references('Id')->on('Supplier')->onDelete('cascade');
         });
 
         Schema::create('Allergies', function (Blueprint $table) {
@@ -136,8 +136,8 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->string('note')->nullable();
 
-            $table->foreign('ProductId')->references('Id')->on('Product');
-            $table->foreign('SupplierId')->references('Id')->on('Supplier')->onDelete('set null');
+            $table->foreign('ProductId')->references('Id')->on('Product')->onDelete('cascade');
+            $table->foreign('SupplierId')->references('Id')->on('Supplier')->onDelete('cascade');
         });
 
         Schema::create('Household', function (Blueprint $table) {
@@ -177,8 +177,8 @@ return new class extends Migration
             $table->string('note')->nullable();
 
             $table->foreign('HouseholdId')->references('Id')->on('Household')->onDelete('cascade');
-            $table->foreign('FoodPackageId')->references('Id')->on('FoodPackages');
-            $table->foreign('VolunteerId')->references('Id')->on('Contact')->onDelete('set null');
+            $table->foreign('FoodPackageId')->references('Id')->on('FoodPackages')->onDelete('cascade');
+            $table->foreign('VolunteerId')->references('Id')->on('Contact')->onDelete('cascade');
         });
     }
 

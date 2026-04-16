@@ -21,7 +21,7 @@ class SupplierModelFactory extends Factory
         return [
             'CompanyName' => $this->faker->company(),
             'ContactId' => ContactModel::factory(),
-            'is_active' => true,
+            'is_active' => $this->faker->boolean(70),
             'note' => $this->faker->sentence(),
         ];
     }

@@ -69,10 +69,10 @@ class SupplierController extends Controller
 
             // Return the view with paginated suppliers
             return view('supplier.index', [
-                'suppliers' => $suppliersPaginated, 
-                'IsActive' => $totalIsActive
-                ]);
-                
+                'suppliers' => $suppliersPaginated,
+                'IsActive' => $totalIsActive,
+            ]);
+
         } catch (\Exception $e) {
             // Log any unexpected errors with full context for debugging
             Log::error('Error retrieving suppliers', [
@@ -170,21 +170,20 @@ class SupplierController extends Controller
                 return redirect()->back()
                     ->withInput()
                     ->with('error', 'Deze leverancier bestaat al.');
-            }
-            else {
+            } else {
 
-            // Create new supplier in the database
-            $this->supplier->createSupplier($validated);
+                // Create new supplier in the database
+                $this->supplier->createSupplier($validated);
 
-            // Log successful creation with supplier details
-            Log::info('Supplier created successfully', [
-                'company_name' => $validated['CompanyName'],
-                'name' => $validated['FirstName'].' '.$validated['LastName'],
-            ]);
+                // Log successful creation with supplier details
+                Log::info('Supplier created successfully', [
+                    'company_name' => $validated['CompanyName'],
+                    'name' => $validated['FirstName'].' '.$validated['LastName'],
+                ]);
 
-            // Redirect to index with success message
-            return redirect()->route('supplier.index')
-                ->with('success', 'Leverancier succesvol aangemaakt.');
+                // Redirect to index with success message
+                return redirect()->route('supplier.index')
+                    ->with('success', 'Leverancier succesvol aangemaakt.');
             }
         } catch (ValidationException $e) {
             // Re-throw validation exceptions to be handled by Laravel's validation error handler
@@ -223,7 +222,7 @@ class SupplierController extends Controller
      * @param  int  $id  The supplier ID to edit
      * @return View The supplier edit form view
      */
-    public function edit($id)
+    public function edit($id): View|RedirectResponse
     {
         try {
             // Retrieve the supplier record by ID
@@ -379,17 +378,18 @@ class SupplierController extends Controller
                 Log::warning('Attempt to delete active supplier', ['supplier_id' => $id]);
 
                 return redirect()->route('supplier.index')->with('error', 'Leverancier is inactief en kan niet worden verwijderd, omdat deze leverancier nogsteeds bij ons actief is.');
+            } else {
+
+                // Delete the supplier from database
+                $this->supplier->deleteSupplier($id);
+
+                // Log successful deletion with supplier details
+                Log::info('Supplier deleted successfully', ['supplier_id' => $supplier->id]);
+
+                // Redirect to index with success message
+                return redirect()->route('supplier.index')
+                    ->with('success', 'Leverancier succesvol verwijderd.');
             }
-
-            // Delete the supplier from database
-            $this->supplier->deleteSupplier($id);
-
-            // Log successful deletion with supplier details
-            Log::info('Supplier deleted successfully', ['supplier_id' => $supplier->id]);
-
-            // Redirect to index with success message
-            return redirect()->route('supplier.index')
-                ->with('success', 'Leverancier succesvol verwijderd.');
         } catch (\Exception $e) {
             // Log any unexpected errors during deletion
             Log::error('Error deleting supplier', [
