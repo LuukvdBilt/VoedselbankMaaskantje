@@ -13,23 +13,15 @@
         @if (session('success'))
             <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
                 <div class="flex items-center gap-3">
-                    <svg class="h-5 w-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 000-1.414-1.414L9 10.586 7.707 9.293a1 1 000-1.414-1.414L8.293 11.293a1 1 000 1.414l2 2z"
-                            clip-rule="evenodd" />
-                    </svg>
                     <p class="text-sm font-medium text-emerald-800">{{ session('success') }}</p>
+                    <meta http-equiv="refresh" content="3;url={{ route('supplier.index') }}">
                 </div>
             </div>
         @elseif (session('error'))
             <div class="rounded-xl border border-red-100 bg-red-50 p-4">
                 <div class="flex items-center gap-3">
-                    <svg class="h-5 w-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1.707-9.707a1 1 000-1.414L10.586 9l-2.293-2.293a1 1 000-1.414L9.293 10l2.293 2.293a1 1 000 1.414z"
-                            clip-rule="evenodd" />
-                    </svg>
                     <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                    <meta http-equiv="refresh" content="6;url={{ route('supplier.index') }}">
                 </div>
             </div>
         @endif
@@ -118,21 +110,61 @@
                                         </td>
                                         <td class="px-6 py-4 text-neutral-600">{{ $supplier->Phone }}</td>
                                         <td class="px-6 py-4 text-neutral-600">
-                                            {{ $supplier->IsActive ? 'Actief' : 'Inactief' }}</td>
+                                            {{ $supplier->IsActive ? 'Actief' : 'Inactief' }}
+                                        </td>
                                         <td class="px-6 py-4 flex items-center justify-end gap-3">
                                             <a href="{{ route('supplier.edit', $supplier->Id) }}"
                                                 class="text-blue-500 hover:text-blue-700 transition">
                                                 Wijzigen
                                             </a>
-                                            <form method="POST" action="{{ route('supplier.destroy', $supplier->Id) }}"
-                                                onsubmit="return confirm('Weet u zeker dat u deze leverancier wilt verwijderen?');"
-                                                class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-500 hover:text-red-700 transition">
+                                            <div x-data="{ open: false }">
+                                                <!-- Trigger Button -->
+                                                <button @click="open = true" type="button"
+                                                    class="text-red-500 hover:text-red-700 transition">
                                                     Verwijderen
                                                 </button>
-                                            </form>
+
+                                                <!-- Modal Backdrop -->
+                                                <div x-show="open"
+                                                    class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
+                                                    x-cloak>
+
+                                                    <!-- Dark Overlay -->
+                                                    <div class="fixed inset-0 bg-black opacity-50" @click="open = false">
+                                                    </div>
+
+                                                    <!-- Modal Content -->
+                                                    <div
+                                                        class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4 z-10">
+                                                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Bevestig
+                                                            verwijdering</h3>
+                                                        <p class="text-gray-600 mb-6">
+                                                            Weet u zeker dat u deze leverancier wilt verwijderen? Deze actie
+                                                            kan niet ongedaan worden gemaakt.
+                                                        </p>
+
+                                                        <div class="flex justify-end gap-3">
+                                                            <!-- Cancel Button -->
+                                                            <button @click="open = false"
+                                                                class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition">
+                                                                Annuleren
+                                                            </button>
+
+                                                            <!-- Confirm Delete Form -->
+                                                            <form method="POST"
+                                                                action="{{ route('supplier.destroy', $supplier->Id) }}"
+                                                                class="inline">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-md transition">
+                                                                    Ja, verwijderen
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
