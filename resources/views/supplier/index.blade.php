@@ -6,7 +6,7 @@
             <h1 class="text-3xl font-bold text-emerald-800 flex items-center gap-2">
                 Leveranciers Dashboard <span class="text-2xl"></span>
             </h1>
-            <p class="text-neutral-500 text-sm">Here is your overview of all active suppliers</p>
+            <p class="text-neutral-500 text-sm">Hier is uw overzicht van alle actieve leveranciers</p>
         </div>
 
         <!-- Notifications (Success/Error) -->
@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <p class="text-sm font-medium text-neutral-500">Total Suppliers</p>
+                    <p class="text-sm font-medium text-neutral-500">Totaal Leveranciers</p>
                     <h3 class="text-3xl font-bold text-emerald-800">{{ $suppliers->total() ?? 0 }}</h3>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <p class="text-sm font-medium text-neutral-500">Active Contracts</p>
+                    <p class="text-sm font-medium text-neutral-500">Actieve Contracten</p>
                     <h3 class="text-3xl font-bold text-amber-600">{{ $IsActive ?? 0 }}</h3>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            All Suppliers
+                            Alle Leveranciers
                         </h2>
                     </div>
 
@@ -85,11 +85,11 @@
                         <table class="w-full text-left text-sm text-neutral-600">
                             <thead class="bg-neutral-50/50 text-xs uppercase text-neutral-500">
                                 <tr>
-                                    <th class="px-6 py-4 font-medium">Company</th>
-                                    <th class="px-6 py-4 font-medium">Contact Person</th>
-                                    <th class="px-6 py-4 font-medium">Mobile</th>
+                                    <th class="px-6 py-4 font-medium">Bedrijf</th>
+                                    <th class="px-6 py-4 font-medium">Contactpersoon</th>
+                                    <th class="px-6 py-4 font-medium">Mobiel</th>
                                     <th class="px-6 py-4 font-medium">Status</th>
-                                    <th class="px-6 py-4 font-medium text-center">Actions</th>
+                                    <th class="px-6 py-4 font-medium text-center">Acties</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-neutral-100">
@@ -107,55 +107,49 @@
                                         </td>
                                         <td class="px-6 py-4 text-neutral-600">{{ $supplier->Phone }}</td>
                                         <td class="px-6 py-4 text-neutral-600">
-                                            {{ $supplier->IsActive ? 'Active' : 'Inactive' }}
+                                            {{ $supplier->IsActive ? 'Actief' : 'Inactief' }}
                                         </td>
-                                        <td class="px-6 py-4 flex items-center justify-end gap-3">
+                                        <td class="px-6 py-4 flex items-center justify-center gap-3">
                                             <a href="{{ route('supplier.edit', $supplier->Id) }}"
-                                                class="text-blue-500 hover:text-blue-700 transition">
-                                                Edit
+                                                class="text-blue-500 hover:text-blue-700 transition cursor-pointer">
+                                                Bewerken
                                             </a>
                                             <div x-data="{ open: false }">
                                                 <!-- Trigger Button -->
-                                                <button @click="open = true" type="button"
-                                                    class="text-red-500 hover:text-red-700 transition">
-                                                    Delete
+                                                <button @click="open = true" type="button" class="text-red-500 hover:text-red-700 transition cursor-pointer">
+                                                    Verwijderen
                                                 </button>
 
                                                 <!-- Modal Backdrop -->
-                                                <div x-show="open"
-                                                    class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
-                                                    x-cloak>
+                                                <div x-show="open" class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto" x-cloak>
 
                                                     <!-- Dark Overlay -->
                                                     <div class="fixed inset-0 bg-black opacity-50" @click="open = false">
                                                     </div>
 
                                                     <!-- Modal Content -->
-                                                    <div
-                                                        class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4 z-10">
-                                                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm
-                                                            deletion</h3>
+                                                    <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4 z-10">
+                                                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Verwijdering
+                                                            bevestigen</h3>
                                                         <p class="text-gray-600 mb-6">
-                                                            Are you sure you want to delete this supplier? This action
-                                                            cannot be undone.
+                                                            Weet u zeker dat u deze leverancier wilt verwijderen? Deze actie
+                                                            kan niet ongedaan gemaakt worden.
                                                         </p>
 
                                                         <div class="flex justify-end gap-3">
                                                             <!-- Cancel Button -->
                                                             <button @click="open = false"
-                                                                class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition">
-                                                                Cancel
+                                                                class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition cursor-pointer">
+                                                                Annuleren
                                                             </button>
 
                                                             <!-- Confirm Delete Form -->
-                                                            <form method="POST"
-                                                                action="{{ route('supplier.destroy', $supplier->Id) }}"
-                                                                class="inline">
+                                                            <form method="POST" action="{{ route('supplier.destroy', $supplier->Id) }}" class="inline">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit"
-                                                                    class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-md transition">
-                                                                    Yes, delete
+                                                                    class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-md transition cursor-pointer">
+                                                                    Ja, verwijderen
                                                                 </button>
                                                             </form>
                                                         </div>
@@ -167,7 +161,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="4" class="px-6 py-8 text-center text-neutral-500">
-                                            No suppliers found in the system.
+                                            Geen leveranciers gevonden in het systeem.
                                         </td>
                                     </tr>
                                 @endforelse
@@ -189,16 +183,17 @@
                 <div
                     class="rounded-2xl border-t-4 border-t-emerald-500 bg-white p-6 shadow-sm border-x border-b border-neutral-100">
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-lg font-bold text-emerald-800">New Supplier</h3>
+                        <h3 class="text-lg font-bold text-emerald-800">Nieuwe Leverancier</h3>
                         <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <p class="text-sm text-neutral-500 mb-4">Add a new supplier to the database to place orders.</p>
+                    <p class="text-sm text-neutral-500 mb-4">Voeg een nieuwe leverancier toe aan de database om
+                        bestellingen te plaatsen.</p>
                     <a href="{{ route('supplier.create') }}"
                         class="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600 w-fit">
-                        Add
+                        Toevoegen
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
                             </path>
