@@ -98,7 +98,7 @@
                 <div class="flex gap-3">
                     <button type="submit"
                         class="rounded-md bg-green-500 px-4 py-2 text-white font-semibold hover:bg-green-600">
-                        Opslaan
+                        Wijzigen
                     </button>
                     <a href="{{ route('supplier.index') }}"
                         class="rounded-md bg-neutral-500 px-4 py-2 text-white font-semibold hover:bg-neutral-600">
